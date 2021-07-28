@@ -7,12 +7,12 @@ const AuthContext = createContext({});
 const AuthProvider = ({ children }) => {
   
   const [authenticated, setAuthenticated] = useState(() => {
-    const isLogged = localStorage.getItem(TOKEN_KEY);
+    const isLogged = sessionStorage.getItem(TOKEN_KEY);
     return !!isLogged;
   });
 
   const [admin, setAdmin] = useState(() => {
-    const isAdmin = localStorage.getItem(ADMIN);
+    const isAdmin = sessionStorage.getItem(ADMIN);
     return !!isAdmin;
   });
 
@@ -25,13 +25,13 @@ const AuthProvider = ({ children }) => {
       })
       .then(function (response) {
 
-        localStorage.setItem(TOKEN_KEY, response.data.token);
+        sessionStorage.setItem(TOKEN_KEY, response.data.token);
         setAuthenticated(true);
-        localStorage.setItem(ID, response.data.id_usuario);
+        sessionStorage.setItem(ID, response.data.id_usuario);
        
         if(response.data.admin === 1){
           setAdmin(true);
-          localStorage.setItem(ADMIN, true);
+          sessionStorage.setItem(ADMIN, true);
         } 
       })
       .catch(function (error) {
@@ -40,11 +40,11 @@ const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    localStorage.removeItem(TOKEN_KEY);
+    sessionStorage.removeItem(TOKEN_KEY);
     setAuthenticated(false);
-    localStorage.removeItem(ADMIN);
+    sessionStorage.removeItem(ADMIN);
     setAdmin(false);
-    localStorage.removeItem(ID);
+    sessionStorage.removeItem(ID);
   };
 
   return (

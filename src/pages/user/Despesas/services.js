@@ -1,7 +1,7 @@
 import api, { TOKEN_KEY, ID } from "../../../api";
 
-const token = localStorage.getItem(TOKEN_KEY);
-const id = localStorage.getItem(ID);
+const token = sessionStorage.getItem(TOKEN_KEY);
+const id = sessionStorage.getItem(ID);
 
 export async function getDespesas(){
     

@@ -19,16 +19,84 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 
+import Modal from "@material-ui/core/Modal";
+import Backdrop from "@material-ui/core/Backdrop";
+import Fade from "@material-ui/core/Fade";
+
+import TextField from "@material-ui/core/TextField";
+import MenuItem from '@material-ui/core/MenuItem';
+
+import CancelIcon from '@material-ui/icons/Cancel';
+import SaveIcon from '@material-ui/icons/Save';
+
+
 import moment from "moment";
 import "moment/locale/pt-br";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   table: {
     minWidth: 650,
   },
-});
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: "2px solid #287C43",
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10
+  },
+  root: {
+    "& > *": {
+      margin: theme.spacing(1),
+      width: "40ch",
+      
+    },
+  },
+  button: {
+    margin: theme.spacing(1),
+  },
+ 
+}));
+
+const unidades = [
+  {
+    value: 'KG',
+    label: 'KG',
+  },
+  {
+    value: 'CAIXA',
+    label: 'CX',
+  },
+  {
+    value: 'UND',
+    label: 'UND',
+  },
+];
 
 export default function Vendas() {
+  const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const [unidade, setUnidade] = React.useState('KG');
+
+  const handleChange = (event) => {
+    setUnidade(event.target.value);
+  };
+
 
   const [list, setList] = useState([]);
   const totalVendas = list.length;
@@ -58,9 +126,6 @@ export default function Vendas() {
       })
       .catch();
   }, []);
-
-
-  const classes = useStyles();
 
   return (
     <>
@@ -116,9 +181,114 @@ export default function Vendas() {
                 block={false}
                 iconOnly={false}
                 ripple="light"
+                onClick={handleOpen}
               >
                 Adicionar Venda
               </ButtonT>
+
+              <Modal
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                className={classes.modal}
+                open={open}
+                onClose={handleClose}
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                  timeout: 500,
+                }}
+              >
+                <Fade in={open}>
+
+                  <div className={classes.paper}>
+
+                    <h2 style={{
+                      fontSize: 30,
+                      fontFamily: 'monospace',
+                      textAlign: 'center',
+                      backgroundColor:  '#287C43',
+                      color: '#fff',
+                      borderRadius: 10
+                    }} id="transition-modal-title">Nova Venda</h2>
+
+                    <form className={[classes.root]} noValidate autoComplete="off" >
+
+                      <div style={{padding: 10}}>
+
+                        <TextField 
+                          id="standard-basic" 
+                          label="Descrição"
+                          style={{width: '100%', marginBottom: 10}} 
+                          />
+
+                        <TextField
+                          id="date"
+                          label="Data"
+                          type="date"
+                          style={{width: '100%', marginBottom: 10,}}
+                          defaultValue= {new Date()}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          />
+                                           
+                      <TextField
+                        id="standard-select-currency"
+                        select
+                        label="Unidade"
+                        value={unidade}
+                        onChange={handleChange}
+                        style={{width: '45%',marginRight: 32, marginBottom: 10}} 
+                      >
+                        {unidades.map((option) => (
+                          <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+
+                          <TextField 
+                          id="standard-basic" 
+                          label="Quantidade"
+                          style ={{width: '45%', marginBottom: 10}} />
+
+                  
+                        <TextField 
+                          id="standard-basic" 
+                          label="Valor Total" 
+                          style={{width: '100%', marginBottom: 10}} />
+
+                          <TextField 
+                          id="standard-basic" 
+                          label="Comprador"
+                          style={{width: '100%', marginBottom: 10}} />
+
+
+                      </div>
+                      <div style={{marginRight: '12%', marginLeft: '12%'}}>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          className={classes.button}
+                          startIcon={<CancelIcon />}
+                          onClick={handleClose}
+                        >
+                          Cancelar
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          className={classes.button}
+                          endIcon={<SaveIcon />}
+                        >
+                          Salvar
+                        </Button>
+                      </div>
+
+                    </form>
+                  </div>
+                </Fade>
+              </Modal>
 
               <TableContainer component={Paper}>
                 <Table
