@@ -2,7 +2,7 @@ import StatusCard from "components/StatusCard";
 import TableCard from "components/TableCard";
 
 import React, { useEffect, useState } from "react";
-import { getVendas } from "./services";
+import { getUsers } from "./services";
 import constantes from "constantes";
 
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -29,9 +29,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import CancelIcon from '@material-ui/icons/Cancel';
 import SaveIcon from '@material-ui/icons/Save';
 
-
-import moment from "moment";
-import "moment/locale/pt-br";
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -99,8 +96,9 @@ export default function Vendas() {
 
 
   const [list, setList] = useState([]);
-  const totalVendas = list.length;
 
+   const totalUsers = list.length;
+/*
   const valorT = [];
 
   const valorTotal = () => {
@@ -117,10 +115,10 @@ export default function Vendas() {
 
   valorTotal();
 
-  const ganhoTotal = valorT.reduce((total, numero) => total + numero, 0);
+  const ganhoTotal = valorT.reduce((total, numero) => total + numero, 0); */
 
   useEffect(() => {
-    getVendas()
+    getUsers()
       .then((result) => {
         setList(result);
       })
@@ -135,8 +133,8 @@ export default function Vendas() {
             <StatusCard
               color="pink"
               icon="trending_up"
-              title="Vendas Realizadas"
-              amount={`${totalVendas}`}
+              title="Total de Usuários"
+              amount={`${totalUsers}`}
               percentage="3.48 %"
               percentageIcon="arrow_upward"
               percentageColor="green"
@@ -147,7 +145,8 @@ export default function Vendas() {
               icon="paid"
               title="Ganho Total"
               // eslint-disable-next-line no-useless-concat
-              amount={"R$ " + `${ganhoTotal}`}
+             // amount={"R$ " + `${ganhoTotal}`}
+             amount='55'
               percentage="3.48"
               percentageIcon="arrow_downward"
               percentageColor="red"
@@ -171,7 +170,7 @@ export default function Vendas() {
       <div className="px-3 md:px-8 h-auto -mt-24">
         <div className="container mx-auto max-w-full">
           <div className="grid grid-cols-1 px-4 mb-16">
-            <TableCard title="Vendas" color={constantes.colors.primary}>
+            <TableCard title="Usuários" color={constantes.colors.primary}>
               <ButtonT
                 color={"teal"}
                 buttonType="filled"
@@ -183,7 +182,7 @@ export default function Vendas() {
                 ripple="light"
                 onClick={handleOpen}
               >
-                Adicionar Venda
+                Novo Usuário
               </ButtonT>
 
               <Modal
@@ -298,32 +297,29 @@ export default function Vendas() {
                 >
                   <TableHead>
                     <TableRow>
-                      <TableCell align="center">Descrição</TableCell>
-                      <TableCell align="center">Data</TableCell>
-                      <TableCell align="center">Comprador</TableCell>
-                      <TableCell align="center">Quantidade</TableCell>
-                      <TableCell align="center">Valor</TableCell>
-                      <TableCell align="center">Unidade</TableCell>
-                      <TableCell align="center">Valor Total</TableCell>
-                      <TableCell align="center">Opções</TableCell>
+                      <TableCell align="center">ID</TableCell>
+                      <TableCell align="center">TIPO</TableCell>
+                      <TableCell align="center">CPF</TableCell>
+                      <TableCell align="center">NOME</TableCell>
+                      <TableCell align="center">EMAIL</TableCell>
+                      <TableCell align="center">LOCALIDADE</TableCell>
+                      <TableCell align="center">SITUAÇÃO</TableCell>
+                      <TableCell align="center">OPÇÕES</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {list.map((row, i) => (
                       <TableRow key={row.id}>
                         <TableCell align="center" component="th" scope="row">
-                          {row.descricao}
+                          {row.id}
                         </TableCell>
-                        <TableCell align="center">
-                          {moment(new Date(row.data))
-                            .locale("pt-br")
-                            .format("ddd, D [de] MMMM [de] YYYY")}
-                        </TableCell>
-                        <TableCell align="center">{row.comprador}</TableCell>
-                        <TableCell align="center">{row.quantidade}</TableCell>
-                        <TableCell align="center">{row.valor}</TableCell>
-                        <TableCell align="center">{row.unidade}</TableCell>
-                        <TableCell align="center">{getTotal(i)}</TableCell>
+                        <TableCell align="center">{row.admin === 0 ?  'Padrão' : 'Adm'}</TableCell>
+                        <TableCell align="center">{row.cpf}</TableCell>
+                        <TableCell align="center">{`${row.nome}  ${row.sobrenome === null ? '' : row.sobrenome }`}</TableCell>
+                        <TableCell align="center">{row.email}</TableCell>
+                        <TableCell align="center">{row.localidade}</TableCell>
+                        <TableCell align="center">{row.ativa === 0 ? 'Desativada' : 'Ativa'}</TableCell>
+                        
 
                         <TableCell align="center">
                           <Button

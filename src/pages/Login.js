@@ -34,9 +34,10 @@ const useStyles = makeStyles((theme) => ({
 
 
 
+
+
 export default function Login() {
   
-
     const {login} = UseAuth();
 
     const [email, setEmail] = useState('');
@@ -120,14 +121,17 @@ export default function Login() {
                         </div>
 
                         <div style={{marginTop: '10%'}} className="flex justify-center bg-bb">
+
                             <Button
                                 color="teal"
                                 buttonType="link"
                                 size="lg"
                                 ripple="dark"
-                            >
+                                onClick ={() =>window.location.href = "/register"}>
+                  
                                 Cadastre - se
                             </Button>
+
                         </div>
                     </CardFooter>
 

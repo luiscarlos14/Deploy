@@ -2,7 +2,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 
 import Sidebar from '../components/SidebarAdm';
 import Dashboard from '../pages/user/Dashboard';
-import Settings from '../pages/user/Settings';
+import Users from '../pages/admin/Users'
 import Tables from '../pages/user/Tables';
 import Maps from '../pages/Login';
 import Footer from '../components/Footer';
@@ -16,7 +16,7 @@ function User() {
             <div className="md:ml-64">
                 <Switch>
                     <Route exact path="/" component={Dashboard} />
-                    <Route exact path="/settings" component={Settings} />
+                    <Route exact path="/users" component={Users} />
                     <Route exact path="/tables" component={Tables} />
                     <Route exact path="/maps" component={Maps} />
                     <Redirect from="*" to="/" />
