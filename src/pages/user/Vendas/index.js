@@ -1,8 +1,9 @@
+/* eslint-disable no-unreachable */
 import StatusCard from "components/StatusCard";
 import TableCard from "components/TableCard";
 
 import React, { useEffect, useState } from "react";
-import { getVendas } from "./services";
+import { getVendas, postVenda } from "./services";
 import constantes from "constantes";
 
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -28,7 +29,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 import CancelIcon from '@material-ui/icons/Cancel';
 import SaveIcon from '@material-ui/icons/Save';
-
 
 import moment from "moment";
 import "moment/locale/pt-br";
@@ -61,7 +61,13 @@ const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
   },
- 
+  alerta: {
+    width: '100%',
+    '& > * + *': {
+      marginTop: theme.spacing(2),
+    },
+  },
+
 }));
 
 const unidades = [
@@ -81,6 +87,28 @@ const unidades = [
 
 export default function Vendas() {
   const classes = useStyles();
+
+  function refreshPage(status) {
+    if(status === 200){
+      alert('Venda inserida')
+      document.location.reload();
+    }
+  }
+
+  const [descVenda, setDescVenda] = useState('');
+  const [dataVenda, setDataVenda] = useState('');
+  const [unidade, setUnidade] = useState('KG');
+  const [qtdVenda, setQtdVenda]  = useState('');
+  const [valorVenda, setValorVenda] = useState('');
+  const [comprador, setComprador] = useState('');
+
+function saveVenda() {
+  postVenda( descVenda, dataVenda, comprador, qtdVenda, valorVenda, unidade, refreshPage )
+
+  }
+
+
+  
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => {
@@ -90,8 +118,6 @@ export default function Vendas() {
   const handleClose = () => {
     setOpen(false);
   };
-
-  const [unidade, setUnidade] = React.useState('KG');
 
   const handleChange = (event) => {
     setUnidade(event.target.value);
@@ -219,6 +245,7 @@ export default function Vendas() {
                           id="standard-basic" 
                           label="Descrição"
                           style={{width: '100%', marginBottom: 10}} 
+                          onChange={(e) => setDescVenda(e.target.value)}
                           />
 
                         <TextField
@@ -230,6 +257,7 @@ export default function Vendas() {
                           InputLabelProps={{
                             shrink: true,
                           }}
+                          onChange={(e) => setDataVenda(e.target.value)}
                           />
                                            
                       <TextField
@@ -250,18 +278,21 @@ export default function Vendas() {
                           <TextField 
                           id="standard-basic" 
                           label="Quantidade"
-                          style ={{width: '45%', marginBottom: 10}} />
+                          style ={{width: '45%', marginBottom: 10}}
+                        onChange={(e) => setQtdVenda(e.target.value)} />
 
                   
                         <TextField 
                           id="standard-basic" 
-                          label="Valor Total" 
-                          style={{width: '100%', marginBottom: 10}} />
+                          label="Valor Unidade" 
+                          style={{width: '100%', marginBottom: 10}} 
+                          onChange={(e) => setValorVenda(e.target.value)}/>
 
                           <TextField 
                           id="standard-basic" 
                           label="Comprador"
-                          style={{width: '100%', marginBottom: 10}} />
+                          style={{width: '100%', marginBottom: 10}} 
+                          onChange={(e) => setComprador(e.target.value)}/>
 
 
                       </div>
@@ -280,6 +311,7 @@ export default function Vendas() {
                           color="primary"
                           className={classes.button}
                           endIcon={<SaveIcon />}
+                          onClick={saveVenda}
                         >
                           Salvar
                         </Button>

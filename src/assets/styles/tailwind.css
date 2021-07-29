@@ -531,9 +531,6 @@ video {
 .top-0{
 	top: 0px;
 }
-.bottom-0{
-	bottom: 0px;
-}
 .top-1\/2{
 	top: 50%;
 }
@@ -853,15 +850,8 @@ video {
 .bg-gradient-to-tr{
 	background-image: linear-gradient(to top right, var(--tw-gradient-stops));
 }
-.from-purple-500{
-	--tw-gradient-from: #8b5cf6;
-	--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(139, 92, 246, 0));
-}
 .to-green-700{
 	--tw-gradient-to: #047857;
-}
-.to-purple-700{
-	--tw-gradient-to: #6d28d9;
 }
 .bg-cover{
 	background-size: cover;
@@ -2736,10 +2726,10 @@ video {
 	.xl\:grid-cols-6{
 		grid-template-columns: repeat(6, minmax(0, 1fr));
 	}
-	.xl\:grid-cols-5{
-		grid-template-columns: repeat(5, minmax(0, 1fr));
-	}
 	.xl\:grid-cols-3{
 		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+	.xl\:grid-cols-5{
+		grid-template-columns: repeat(5, minmax(0, 1fr));
 	}
 }

@@ -16,7 +16,8 @@ const AuthProvider = ({ children }) => {
     return !!isAdmin;
   });
 
-  
+
+
   const login = (email, senha) => {
     api
       .post("/login", {
@@ -27,8 +28,9 @@ const AuthProvider = ({ children }) => {
 
         sessionStorage.setItem(TOKEN_KEY, response.data.token);
         setAuthenticated(true);
+
         sessionStorage.setItem(ID, response.data.id_usuario);
-       
+
         if(response.data.admin === 1){
           setAdmin(true);
           sessionStorage.setItem(ADMIN, true);
