@@ -104,8 +104,7 @@ export default function Vendas() {
 
 function saveVenda() {
   postVenda( descVenda, dataVenda, comprador, qtdVenda, valorVenda, unidade, refreshPage )
-
-  }
+}
 
 
   

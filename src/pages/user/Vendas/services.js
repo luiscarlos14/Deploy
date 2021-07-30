@@ -4,7 +4,7 @@ const token = sessionStorage.getItem(TOKEN_KEY);
 
 export async function getVendas() {
   const res = (
-    await api.get(`/vendas/${sessionStorage.getItem(ID)}`, {
+    await api.get(`/vendas/${localStorage.getItem(ID)}`, {
       headers: { Authorization: `token ${token}` },
     })
   ).data.response;
@@ -17,21 +17,19 @@ export async function postVenda(
   comprador,
   qtd,
   valor,
-  und,
   refreshPage
 ) {
   await api
     .post(
       `/vendas`,
       {
-        usuario: sessionStorage.getItem(ID),
+        usuario: localStorage.getItem(ID),
         descricao: desc,
         data: date,
         comprador: comprador,
         quantidade: qtd,
         valor: valor,
         numero: "1",
-        unidade: und,
         frequencia: "Recorrente",
       },
       {

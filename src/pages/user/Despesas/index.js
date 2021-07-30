@@ -8,7 +8,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import CreateIcon from "@material-ui/icons/Create";
 import Button from "@material-ui/core/Button";
 
-import { getDespesas } from "./services";
+import { getDespesas, postDespesa } from "./services";
 
 import React, {useEffect, useState} from 'react';
 import ButtonT from "@material-tailwind/react/Button";
@@ -21,19 +21,105 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
+import Modal from "@material-ui/core/Modal";
+import Backdrop from "@material-ui/core/Backdrop";
+import Fade from "@material-ui/core/Fade";
+
+import TextField from "@material-ui/core/TextField";
+import MenuItem from '@material-ui/core/MenuItem';
+
+import CancelIcon from '@material-ui/icons/Cancel';
+import SaveIcon from '@material-ui/icons/Save';
+
 
 import moment from "moment";
 import "moment/locale/pt-br";
 
+const status = [
 
-const useStyles = makeStyles({
+  {
+    value: 1,
+    label: 'PAGA',
+  },
+  {
+    value: 0,
+    label: 'PENDENTE',
+  },
+];
+
+
+const useStyles = makeStyles((theme) => ({
   table: {
     minWidth: 650,
   },
-});
+  
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    border: "2px solid #287C43",
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10
+  },
+  root: {
+    "& > *": {
+      margin: theme.spacing(1),
+      width: "40ch",
+      
+    },
+  },
+  button: {
+    margin: theme.spacing(1),
+  },
+  alerta: {
+    width: '100%',
+    '& > * + *': {
+      marginTop: theme.spacing(2),
+    },
+  },
+}));
 
 
 export default function Despesas() { 
+
+  function refreshPage(status) {
+    if(status === 200){
+      alert('Despesa inserida')
+      document.location.reload();
+    }
+  }
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleChange = (event) => {
+    setStatusDespesa(event.target.value);
+  };
+
+
+
+
+  const [descDespesa, setDescDespesa] = useState('');
+  const [dataDespesa, setDataDespesa] = useState('');
+  const [statusDespesa, setStatusDespesa]  = useState(0);
+  const [valorDespesa, setValorDespesa] = useState('');
+
+  function saveDespesa() {
+    postDespesa( descDespesa, dataDespesa, valorDespesa, statusDespesa, refreshPage )
+  }
 
   const [list, setList] = useState([]);
 
@@ -74,7 +160,7 @@ console.log(list)
               color="pink"
               icon="trending_up"
               title="Total de Despesas"
-              amount={totalDespesas}
+              amount={`${totalDespesas}`}
               percentage="3.48 %"
               percentageIcon="arrow_upward"
               percentageColor="green"
@@ -119,9 +205,112 @@ console.log(list)
                 block={false}
                 iconOnly={false}
                 ripple="light"
+                onClick={handleOpen}
               >
                 Adicionar Despesa
               </ButtonT>
+
+              <Modal
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                className={classes.modal}
+                open={open}
+                onClose={handleClose}
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                  timeout: 500,
+                }}
+              >
+                <Fade in={open}>
+
+                  <div className={classes.paper}>
+
+                    <h2 style={{
+                      fontSize: 30,
+                      fontFamily: 'monospace',
+                      textAlign: 'center',
+                      backgroundColor:  constantes.colors.despesas,
+                      color: '#fff',
+                      borderRadius: 10
+                    }} id="transition-modal-title">Nova Despesa</h2>
+
+                    <form className={[classes.root]} noValidate autoComplete="off" >
+
+                      <div style={{padding: 10}}>
+
+                        <TextField 
+                          id="standard-basic" 
+                          label="Descrição"
+                          style={{width: '100%', marginBottom: 10}} 
+                          onChange={(e) => setDescDespesa(e.target.value)}
+                          />
+
+                        <TextField
+                          id="date"
+                          label="Data"
+                          type="date"
+                          style={{width: '100%', marginBottom: 10,}}
+                          defaultValue= {new Date()}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          onChange={(e) => setDataDespesa(e.target.value)}
+                          />
+                                           
+                     
+
+                          <TextField 
+                          id="standard-basic" 
+                          label="Valor"
+                          style ={{width: '40%', marginRight: '10%', marginBottom: 10}}
+                        onChange={(e) => setValorDespesa(e.target.value)} />
+
+                      <TextField
+                        id="standard-select-currency"
+                        select
+                        label="Status"
+                        value={statusDespesa}
+                        onChange={handleChange}
+                        style={{width: '40%',marginRight: 32, marginBottom: 10}} 
+                      >
+                        {status.map((option) => (
+                          <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+
+                  
+                
+
+
+                      </div>
+                      <div style={{marginRight: '12%', marginLeft: '12%'}}>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          className={classes.button}
+                          startIcon={<CancelIcon />}
+                          onClick={handleClose}
+                        >
+                          Cancelar
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          className={classes.button}
+                          endIcon={<SaveIcon />}
+                          onClick={saveDespesa}
+                        >
+                          Salvar
+                        </Button>
+                      </div>
+
+                    </form>
+                  </div>
+                </Fade>
+              </Modal>
 
               <TableContainer component={Paper}>
                 <Table
@@ -134,7 +323,7 @@ console.log(list)
                       <TableCell align="center">Descrição</TableCell>
                       <TableCell align="center">Data</TableCell>
                       <TableCell align="center">Valor</TableCell>
-                      <TableCell align="center">Paga</TableCell>
+                      <TableCell align="center">Status</TableCell>
                       <TableCell align="center">Opções</TableCell>
                     </TableRow>
                   </TableHead>
@@ -153,7 +342,7 @@ console.log(list)
                         </TableCell>
                         <TableCell align="center">{row.valor}</TableCell>
 
-                        <TableCell align="center">{row.paga}</TableCell>
+                        <TableCell align="center">{row.paga === 1 ? 'Paga' : 'Pendente'}</TableCell>
 
                         <TableCell align="center">
                           <Button

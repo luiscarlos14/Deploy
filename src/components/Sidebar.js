@@ -64,12 +64,12 @@ export default function Sidebar() {
 
               <li className="rounded-lg mb-2">
                 <NavLink
-                  to="/produtos"
+                  to="/insumos"
                   className="flex items-center gap-4 text-sm text-gray-700 font-light px-4 py-3 rounded-lg"
                   activeClassName="bg-gradient-to-tr from-light-green-500 to-green-700 text-white shadow-md"
                 >
-                  <StorefrontIcon />
-                  Produtos
+                  <ListAltIcon />
+                  Insumos em Estoque
                 </NavLink>
               </li>
 
@@ -95,16 +95,19 @@ export default function Sidebar() {
                 </NavLink>
               </li>
 
+              
+
               <li className="rounded-lg mb-2">
                 <NavLink
-                  to="/insumos"
+                  to="/produtos"
                   className="flex items-center gap-4 text-sm text-gray-700 font-light px-4 py-3 rounded-lg"
                   activeClassName="bg-gradient-to-tr from-light-green-500 to-green-700 text-white shadow-md"
                 >
-                  <ListAltIcon />
-                  Insumos
+                  <StorefrontIcon />
+                  Produtos
                 </NavLink>
               </li>
+
             </ul>
           </div>
         </div>
