@@ -1,9 +1,9 @@
 import { Switch, Route, Redirect } from 'react-router-dom';
 
 import Sidebar from '../components/SidebarAdm';
-import Dashboard from '../pages/user/Dashboard';
+import Dashboard from '../pages/admin/Dashboard/index';
 import Users from '../pages/admin/Users'
-import Tables from '../pages/user/Tables';
+import Suppliers from '../pages/admin/Suppliers/index'
 import Maps from '../pages/Login';
 import Footer from '../components/Footer';
 
@@ -17,7 +17,7 @@ function User() {
                 <Switch>
                     <Route exact path="/" component={Dashboard} />
                     <Route exact path="/users" component={Users} />
-                    <Route exact path="/tables" component={Tables} />
+                    <Route exact path="/suppliers" component={Suppliers} />
                     <Route exact path="/maps" component={Maps} />
                     <Redirect from="*" to="/" />
                 </Switch>

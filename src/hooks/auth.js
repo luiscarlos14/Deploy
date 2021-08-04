@@ -5,7 +5,6 @@ import api, { TOKEN_KEY, ADMIN, ID } from "../api";
 const AuthContext = createContext({});
 
 const AuthProvider = ({ children }) => {
-  
   const [authenticated, setAuthenticated] = useState(() => {
     const isLogged = sessionStorage.getItem(TOKEN_KEY);
     return !!isLogged;
@@ -16,7 +15,12 @@ const AuthProvider = ({ children }) => {
     return !!isAdmin;
   });
 
-
+  function time() {
+    const timer = setTimeout(() => {
+      document.location.reload();
+    }, 100);
+    return () => clearTimeout(timer);
+  }
 
   const login = (email, senha) => {
     api
@@ -25,16 +29,17 @@ const AuthProvider = ({ children }) => {
         senha: senha,
       })
       .then(function (response) {
-
         sessionStorage.setItem(TOKEN_KEY, response.data.token);
         setAuthenticated(true);
 
         localStorage.setItem(ID, response.data.id_usuario);
 
-        if(response.data.admin === 1){
+        if (response.data.admin === 1) {
           setAdmin(true);
           sessionStorage.setItem(ADMIN, true);
-        } 
+        }
+
+        time();
       })
       .catch(function (error) {
         alert("Email ou Senha Incorretos");

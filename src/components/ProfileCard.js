@@ -15,28 +15,9 @@ export default function ProfileCard() {
                 <div className="w-48 px-4 -mt-24">
                     <Image src={ProfilePicture} rounded raised />
                 </div>
-                <div className="w-full flex justify-center py-4 lg:pt-4 pt-8">
-                    <div className="p-4 text-center">
-                        <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
-                            22
-                        </span>
-                        <span className="text-sm text-gray-700">Friends</span>
-                    </div>
-                    <div className="p-4 text-center">
-                        <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
-                            89
-                        </span>
-                        <span className="text-sm text-gray-700">Comments</span>
-                    </div>
-                    <div className="p-4 text-center">
-                        <span className="text-xl font-medium block uppercase tracking-wide text-gray-900">
-                            10
-                        </span>
-                        <span className="text-sm text-gray-700">Photos</span>
-                    </div>
-                </div>
             </div>
-            <div className="text-center">
+
+            <div style={{marginTop: 10}} className="text-center">
                 <H5 color="gray">John Smith</H5>
                 <div className="mt-0 mb-2 text-gray-700 flex items-center justify-center gap-2">
                     <Icon name="place" size="xl" />

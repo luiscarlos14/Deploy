@@ -73,9 +73,15 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
                                     color: 'transparent',
                                 }}
                             >
-                                <DropdownItem color="green">
-                                    Perfil  
-                                </DropdownItem>
+                                <Button
+                                color="teal"
+                                buttonType="link"
+                                ripple="dark"
+                                type='submit'
+                                onClick={() => (window.location.href = "/perfil")}>
+                                Perfil
+                                </Button>
+
                                 <DropdownItem color="green">
                                     Another Action
                                 </DropdownItem >
@@ -88,7 +94,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
                                 type='submit'
                                 onClick={logout}>
                                 Sair
-                            </Button>
+                                </Button>
 
 
                           

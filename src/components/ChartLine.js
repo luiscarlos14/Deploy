@@ -5,29 +5,36 @@ import CardHeader from '@material-tailwind/react/CardHeader';
 import CardBody from '@material-tailwind/react/CardBody';
 
 export default function ChartLine() {
+    const teste = [ 10,20,30,40,50,60,70,80,90,30,20,10]
+
     useEffect(() => {
         var config = {
             type: 'line',
             data: {
                 labels: [
-                    'January',
-                    'February',
-                    'March',
-                    'April',
-                    'May',
-                    'June',
-                    'July',
+                    'Janeiro',
+                    'Fevereiro',
+                    'Março',
+                    'Abril',
+                    'Maio',
+                    'Junho',
+                    'Julho',
+                    'Agosto',
+                    'Setembro',
+                    'Outubro',
+                    'Novembro',
+                    'Dezembro',
                 ],
                 datasets: [
                     {
-                        label: new Date().getFullYear(),
+                        label: 'Vendas',
                         backgroundColor: '#03a9f4',
                         borderColor: '#03a9f4',
-                        data: [65, 78, 66, 44, 56, 67, 75],
+                        data: teste,
                         fill: false,
                     },
                     {
-                        label: new Date().getFullYear() - 1,
+                        label: 'Despesas',
                         fill: false,
                         backgroundColor: '#ff9800',
                         borderColor: '#ff9800',
@@ -114,9 +121,9 @@ export default function ChartLine() {
         <Card>
             <CardHeader color="orange" contentPosition="left">
                 <h6 className="uppercase text-gray-200 text-xs font-medium">
-                    Overview
+                    Gráfico Mensal
                 </h6>
-                <h2 className="text-white text-2xl">Sales value</h2>
+                <h2 className="text-white text-2xl">Vendas e Despesas</h2>
             </CardHeader>
             <CardBody>
                 <div className="relative h-96">
