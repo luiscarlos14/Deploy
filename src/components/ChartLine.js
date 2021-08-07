@@ -5,7 +5,6 @@ import CardHeader from '@material-tailwind/react/CardHeader';
 import CardBody from '@material-tailwind/react/CardBody';
 
 export default function ChartLine() {
-    const teste = [ 10,20,30,40,50,60,70,80,90,30,20,10]
 
     useEffect(() => {
         var config = {
@@ -18,19 +17,13 @@ export default function ChartLine() {
                     'Abril',
                     'Maio',
                     'Junho',
-                    'Julho',
-                    'Agosto',
-                    'Setembro',
-                    'Outubro',
-                    'Novembro',
-                    'Dezembro',
                 ],
                 datasets: [
                     {
                         label: 'Vendas',
                         backgroundColor: '#03a9f4',
                         borderColor: '#03a9f4',
-                        data: teste,
+                        data:  [50,62,76,86,53],
                         fill: false,
                     },
                     {
@@ -38,7 +31,7 @@ export default function ChartLine() {
                         fill: false,
                         backgroundColor: '#ff9800',
                         borderColor: '#ff9800',
-                        data: [40, 68, 86, 74, 56, 60, 87],
+                        data: [40, 68, 86, 74, 56, 60],
                     },
                 ],
             },
