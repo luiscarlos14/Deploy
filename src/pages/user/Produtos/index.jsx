@@ -4,7 +4,7 @@ import StoreCard from '../../../components/StoreCard';
 export default function Produtos() {
  return (
    <div>
-<StoreCard />
+      <StoreCard />
    </div>
  );
 }

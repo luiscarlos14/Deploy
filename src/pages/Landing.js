@@ -1,5 +1,5 @@
-import DefaultNavbar from 'components/DefaultNavbar';
-import DefaultFooter from 'components/DefaultFooter';
+import DefaultNavbar from 'components/landing/DefaultNavbar';
+import DefaultFooter from 'components/landing/DefaultFooter';
 import Header from 'components/landing/Header';
 import WorkingSection from 'components/landing/WorkingSection';
 import TeamSection from 'components/landing/TeamSection';

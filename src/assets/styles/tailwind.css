@@ -1,11 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 /*!
 =========================================================
-* Material Tailwind Dashboard React - v1.1.0
+* Material Tailwind Kit React - v1.1.0
 =========================================================
-* Product Page: https://www.creative-tim.com/product/material-tailwind-dashboard-react
-* Copyright 2019 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/material-tailwind-dashboard-react/blob/main/LICENSE.md)
+* Product Page: https://www.creative-tim.com/product/material-tailwind-kit-react
+* Copyright 2021 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://github.com/creativetimofficial/material-tailwind-kit-react/blob/main/LICENSE.md)
 * Coded by Creative Tim
 =========================================================
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
@@ -628,6 +628,33 @@ video {
 .mb-12{
 	margin-bottom: 3rem;
 }
+.-mt-12{
+	margin-top: -3rem;
+}
+.mt-24{
+	margin-top: 6rem;
+}
+.mt-16{
+	margin-top: 4rem;
+}
+.mr-auto{
+	margin-right: auto;
+}
+.mb-5{
+	margin-bottom: 1.25rem;
+}
+.mb-24{
+	margin-bottom: 6rem;
+}
+.-mt-32{
+	margin-top: -8rem;
+}
+.mt-32{
+	margin-top: 8rem;
+}
+.mt-2{
+	margin-top: 0.5rem;
+}
 .-mt-64{
 	margin-top: -16rem;
 }
@@ -643,8 +670,14 @@ video {
 .block{
 	display: block;
 }
+.inline-block{
+	display: inline-block;
+}
 .flex{
 	display: flex;
+}
+.inline-flex{
+	display: inline-flex;
 }
 .table{
 	display: table;
@@ -663,6 +696,9 @@ video {
 }
 .h-screen{
 	height: 100vh;
+}
+.h-12{
+	height: 3rem;
 }
 .h-\[500px\]{
 	height: 500px;
@@ -715,6 +751,9 @@ video {
 .max-w-sm{
 	max-width: 24rem;
 }
+.flex-auto{
+	flex: 1 1 auto;
+}
 .border-collapse{
 	border-collapse: collapse;
 }
@@ -749,6 +788,9 @@ video {
 }
 .place-items-center{
 	place-items: center;
+}
+.content-center{
+	align-content: center;
 }
 .items-center{
 	align-items: center;
@@ -832,6 +874,38 @@ video {
 .bg-transparent{
 	background-color: transparent;
 }
+.bg-gray-500{
+	--tw-bg-opacity: 1;
+	background-color: rgba(107, 114, 128, var(--tw-bg-opacity));
+}
+.bg-yellow-600{
+	--tw-bg-opacity: 1;
+	background-color: rgba(217, 119, 6, var(--tw-bg-opacity));
+}
+.bg-green-500{
+	--tw-bg-opacity: 1;
+	background-color: rgba(16, 185, 129, var(--tw-bg-opacity));
+}
+.bg-blue-500{
+	--tw-bg-opacity: 1;
+	background-color: rgba(59, 130, 246, var(--tw-bg-opacity));
+}
+.bg-indigo-500{
+	--tw-bg-opacity: 1;
+	background-color: rgba(99, 102, 241, var(--tw-bg-opacity));
+}
+.bg-purple-500{
+	--tw-bg-opacity: 1;
+	background-color: rgba(139, 92, 246, var(--tw-bg-opacity));
+}
+.bg-pink-500{
+	--tw-bg-opacity: 1;
+	background-color: rgba(236, 72, 153, var(--tw-bg-opacity));
+}
+.bg-red-500{
+	--tw-bg-opacity: 1;
+	background-color: rgba(239, 68, 68, var(--tw-bg-opacity));
+}
 .bg-gradient-to-tr{
 	background-image: linear-gradient(to top right, var(--tw-gradient-stops));
 }
@@ -846,6 +920,9 @@ video {
 }
 .p-3{
 	padding: 0.75rem;
+}
+.p-5{
+	padding: 1.25rem;
 }
 .py-6{
 	padding-top: 1.5rem;
@@ -920,6 +997,21 @@ video {
 }
 .pl-4{
 	padding-left: 1rem;
+}
+.pb-20{
+	padding-bottom: 5rem;
+}
+.pt-16{
+	padding-top: 4rem;
+}
+.pb-32{
+	padding-bottom: 8rem;
+}
+.pt-20{
+	padding-top: 5rem;
+}
+.pb-48{
+	padding-bottom: 12rem;
 }
 .pt-14{
 	padding-top: 3.5rem;
@@ -1038,6 +1130,13 @@ video {
 }
 .transition-all{
 	transition-property: all;
+	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+	transition-duration: 150ms;
+}
+.transition{
+	transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
+	transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+	transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
 	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 	transition-duration: 150ms;
 }
@@ -2586,6 +2685,9 @@ video {
 .lg\:justify-start{justify-content:flex-start}
 .lg\:px-36{padding-left:9rem;padding-right:9rem}
 .lg\:text-left{text-align:left}}
+.bg-landing-background{
+	background-image: linear-gradient(rgba(0,0,0, 0.75), rgba(0,0,0, 0.75)), url("../background-tech.jpg");
+}
 .hover\:text-gray-900:hover{
 	--tw-text-opacity: 1;
 	color: rgba(17, 24, 39, var(--tw-text-opacity));
@@ -2609,6 +2711,12 @@ video {
 	}
 	.md\:w-4\/12{
 		width: 33.333333%;
+	}
+	.md\:w-6\/12{
+		width: 50%;
+	}
+	.md\:w-5\/12{
+		width: 41.666667%;
 	}
 	.md\:justify-start{
 		justify-content: flex-start;
@@ -2655,6 +2763,9 @@ video {
 	.lg\:w-3\/12{
 		width: 25%;
 	}
+	.lg\:w-8\/12{
+		width: 66.666667%;
+	}
 	.lg\:w-9\/12{
 		width: 75%;
 	}
@@ -2672,6 +2783,12 @@ video {
 	}
 	.lg\:self-center{
 		align-self: center;
+	}
+	.lg\:p-10{
+		padding: 2.5rem;
+	}
+	.lg\:pt-24{
+		padding-top: 6rem;
 	}
 	.lg\:pt-4{
 		padding-top: 1rem;
