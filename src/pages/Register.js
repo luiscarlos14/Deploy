@@ -7,6 +7,7 @@ import InputIcon from '@material-tailwind/react/InputIcon';
 import Button from '@material-tailwind/react/Button';
 import Page from 'components/login/Page';
 import Container from 'components/login/Container';
+import style from '../assets/styles/index.css';
 
 export default function Register() {
     return (
@@ -24,7 +25,15 @@ export default function Register() {
                             <InputIcon
                                 type="text"
                                 color="lightBlue"
-                                placeholder="Full Name"
+                                placeholder="Nome"
+                                iconName="account_circle"
+                            />
+                        </div>
+                        <div className="mb-10 px-4">
+                            <InputIcon
+                                type="text"
+                                color="lightBlue"
+                                placeholder="Sobrenome"
                                 iconName="account_circle"
                             />
                         </div>
@@ -32,8 +41,24 @@ export default function Register() {
                             <InputIcon
                                 type="email"
                                 color="lightBlue"
-                                placeholder="Email Address"
+                                placeholder="E-mail"
                                 iconName="email"
+                            />
+                        </div>
+                        <div className="mb-10 px-4">
+                            <InputIcon
+                                type="text"
+                                color="lightBlue"
+                                placeholder="CPF"
+                                iconName="payment"
+                            />
+                        </div>
+                        <div className="mb-10 px-4">
+                            <InputIcon
+                                type="text"
+                                color="lightBlue"
+                                placeholder="Cidade"
+                                iconName="room"
                             />
                         </div>
                         <div className="mb-4 px-4">
