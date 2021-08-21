@@ -3,9 +3,9 @@ import api, { TOKEN_KEY, ID } from "../../../api";
 const token = sessionStorage.getItem(TOKEN_KEY);
 const id = localStorage.getItem(ID);
 
-export async function getInsumos(){
+export async function getFornecedores(){
     
-    const res = (await api.get(`/insumos/${id}`, { 
+    const res = (await api.get(`/fornecedores/`, { 
       headers: { Authorization: `token ${token}`}},
       )).data.response;
     return res;

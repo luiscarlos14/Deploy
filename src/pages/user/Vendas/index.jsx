@@ -2,6 +2,8 @@
 import StatusCard from "components/StatusCard";
 import TableCard from "components/TableCard";
 
+import 'date-fns';
+
 import React, { useEffect, useState } from "react";
 import { getVendas, postVenda } from "./services";
 import constantes from "constantes";
@@ -65,6 +67,9 @@ const useStyles = makeStyles((theme) => ({
     "& > * + *": {
       marginTop: theme.spacing(2),
     },
+    date:{
+
+    }
   },
 }));
 
@@ -90,6 +95,8 @@ export default function Vendas() {
   const [qtdVenda, setQtdVenda] = useState("");
   const [valorVenda, setValorVenda] = useState("");
   const [comprador, setComprador] = useState("");
+
+
 
   const classes = useStyles();
 
@@ -132,7 +139,7 @@ export default function Vendas() {
   const valorTotal = () => {
     let valor = 0;
     for (let i = 0; i < list.length; i++) {
-      valor = list[i].valor * list[i].quantidade;
+      valor = list[i].value * list[i].quantity;
       valorT.push(valor);
     }
   };
@@ -155,9 +162,18 @@ export default function Vendas() {
 
   return (
     <>
+      <div className={classes.date}>
+
+
+      </div>
+
       <div className="bg-white-500 pt-14 pb-28 px-3 md:px-8 h-auto">
         <div className="container mx-auto max-w-full">
+          
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
+
+
+
             <StatusCard
               color="pink"
               icon="trending_up"
@@ -339,6 +355,7 @@ export default function Vendas() {
                 >
                   <TableHead>
                     <TableRow>
+                    <TableCell align="center">ID</TableCell>
                       <TableCell align="center">Descrição</TableCell>
                       <TableCell align="center">Data</TableCell>
                       <TableCell align="center">Comprador</TableCell>
@@ -353,17 +370,20 @@ export default function Vendas() {
                     {list.map((row, i) => (
                       <TableRow key={row.id}>
                         <TableCell align="center" component="th" scope="row">
-                          {row.descricao}
+                          {row.id}
+                        </TableCell>
+                        <TableCell align="center" component="th" scope="row">
+                          {row.describe}
                         </TableCell>
                         <TableCell align="center">
-                          {moment(new Date(row.data))
+                          {moment(new Date(row.date))
                             .locale("pt-br")
                             .format("ddd, D [de] MMMM [de] YYYY")}
                         </TableCell>
-                        <TableCell align="center">{row.comprador}</TableCell>
-                        <TableCell align="center">{row.quantidade}</TableCell>
-                        <TableCell align="center">{row.valor}</TableCell>
-                        <TableCell align="center">{row.unidade}</TableCell>
+                        <TableCell align="center">{row.buyer}</TableCell>
+                        <TableCell align="center">{row.quantity}</TableCell>
+                        <TableCell align="center">{row.value}</TableCell>
+                        <TableCell align="center">{row.unit}</TableCell>
                         <TableCell align="center">{getTotal(i)}</TableCell>
 
                         <TableCell align="center">

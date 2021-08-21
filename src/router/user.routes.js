@@ -10,7 +10,7 @@ import Funcionarios from '../pages/user/Funcionarios/index';
 //import Plantacoes from '../pages/user/Plantacoes';
 import Insumos from '../pages/user/Insumos/index';
 import Settings from '../pages/user/User/index'
-import Produtos from '../pages/user/Produtos/index';
+import Produtos from '../pages/user/Produtos';
 
 // Tailwind CSS Style Sheet
 import "../assets/styles/tailwind.css";

@@ -26,7 +26,7 @@ const AuthProvider = ({ children }) => {
     api
       .post("/login", {
         email: email,
-        senha: senha,
+        password: senha,
       })
       .then(function (response) {
         sessionStorage.setItem(TOKEN_KEY, response.data.token);

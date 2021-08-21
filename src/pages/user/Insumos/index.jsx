@@ -347,11 +347,14 @@ const handleChange = (event) => {
                     <TableRow>
                       <TableCell align="center">Descrição</TableCell>
                       <TableCell align="center">Data da Compra</TableCell>
-                      <TableCell align="center">Valor</TableCell>
+
                       <TableCell align="center">Validade</TableCell>
-                      <TableCell align="center">Quantidade</TableCell>
+                      <TableCell align="center">Em Estoque</TableCell>
+                      <TableCell align="center">Valor Unitário</TableCell>
                       <TableCell align="center">Unidade</TableCell>
                       <TableCell align="center">Opções</TableCell>
+                      
+
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -359,27 +362,28 @@ const handleChange = (event) => {
                       <TableRow key={row.id}>
 
                         <TableCell align="center" component="th" scope="row">
-                          {row.descricao}
+                          {row.describe}
                         </TableCell>
 
                         <TableCell align="center">
-                          {moment(new Date(row.compra))
+                          {moment(new Date(row.purchase))
                             .locale("pt-br")
                             .format("ddd, D [de] MMMM [de] YYYY")}
                         </TableCell>
 
-                        <TableCell align="center">{row.valor}</TableCell>
+                        
 
                         <TableCell align="center">
-                          {moment(new Date(row.validade))
+                          {moment(new Date(row.validity))
                             .locale("pt-br")
                             .format("DD/MM/YYYY")}
                         </TableCell>
                         <TableCell align="center" component="th" scope="row">
-                          {row.estoque}
+                          {row.stock}
                         </TableCell>
+                        <TableCell align="center">{row.value}</TableCell>
                         <TableCell align="center" component="th" scope="row">
-                          {row.unidade}
+                          {row.unit}
                         </TableCell>
 
                         <TableCell align="center">

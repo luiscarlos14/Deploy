@@ -1,8 +1,7 @@
-import StatusCard from 'components/StatusCard';
-import TableCard from 'components/TableCard';
+import StatusCard from "components/StatusCard";
+import TableCard from "components/TableCard";
 
-import constantes from 'constantes';
-
+import constantes from "constantes";
 
 import DeleteIcon from "@material-ui/icons/Delete";
 import CreateIcon from "@material-ui/icons/Create";
@@ -10,49 +9,61 @@ import Button from "@material-ui/core/Button";
 
 import { getDespesas, postDespesa } from "./services";
 
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from "react";
 import ButtonT from "@material-tailwind/react/Button";
-import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import { makeStyles } from "@material-ui/core/styles";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
 
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 
 import TextField from "@material-ui/core/TextField";
-import MenuItem from '@material-ui/core/MenuItem';
+import MenuItem from "@material-ui/core/MenuItem";
 
-import CancelIcon from '@material-ui/icons/Cancel';
-import SaveIcon from '@material-ui/icons/Save';
-
+import CancelIcon from "@material-ui/icons/Cancel";
+import SaveIcon from "@material-ui/icons/Save";
 
 import moment from "moment";
 import "moment/locale/pt-br";
 
 const status = [
-
   {
     value: 1,
-    label: 'PAGA',
+    label: "PAGA",
   },
   {
     value: 0,
-    label: 'PENDENTE',
+    label: "PENDENTE",
   },
 ];
 
+function rand() {
+  return Math.round(Math.random() * 20) - 10;
+}
+
+function getModalStyle() {
+  const top = 50 + rand();
+  const left = 50 + rand();
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
 
 const useStyles = makeStyles((theme) => ({
   table: {
     minWidth: 650,
   },
-  
+
   modal: {
     display: "flex",
     alignItems: "center",
@@ -63,39 +74,50 @@ const useStyles = makeStyles((theme) => ({
     border: "2px solid #287C43",
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+  },
+  paperTwo: {
+    position: "absolute",
+    width: 400,
+    backgroundColor: theme.palette.background.paper,
+    border: "2px solid #000",
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
   },
   root: {
     "& > *": {
       margin: theme.spacing(1),
       width: "40ch",
-      
     },
   },
   button: {
     margin: theme.spacing(1),
   },
   alerta: {
-    width: '100%',
-    '& > * + *': {
+    width: "100%",
+    "& > * + *": {
       marginTop: theme.spacing(2),
     },
   },
 }));
 
-
-export default function Despesas() { 
+export default function Despesas() {
 
   function refreshPage(status) {
-    if(status === 200){
-      alert('Despesa inserida')
+    if (status === 200) {
+      alert("Despesa inserida");
       document.location.reload();
     }
   }
 
   const [open, setOpen] = React.useState(false);
+  const [modalStyle] = React.useState(getModalStyle);
+  const [openDel, setOpenDel] = React.useState(false);
+
+  const [idDel, setIdDel] = useState();
+
 
   const handleOpen = () => {
     setOpen(true);
@@ -105,20 +127,34 @@ export default function Despesas() {
     setOpen(false);
   };
 
+  const handleOpenDel = () => {
+    setOpenDel(true);
+    
+  };
+
+  const handleCloseDel = () => {
+    setOpenDel(false);
+  };
+
   const handleChange = (event) => {
     setStatusDespesa(event.target.value);
   };
 
+  const [descDespesa, setDescDespesa] = useState("");
+  const [dataDespesa, setDataDespesa] = useState("");
+  const [statusDespesa, setStatusDespesa] = useState(0);
+  const [valorDespesa, setValorDespesa] = useState("");
 
-
-
-  const [descDespesa, setDescDespesa] = useState('');
-  const [dataDespesa, setDataDespesa] = useState('');
-  const [statusDespesa, setStatusDespesa]  = useState(0);
-  const [valorDespesa, setValorDespesa] = useState('');
+ 
 
   function saveDespesa() {
-    postDespesa( descDespesa, dataDespesa, valorDespesa, statusDespesa, refreshPage )
+    postDespesa(
+      descDespesa,
+      dataDespesa,
+      valorDespesa,
+      statusDespesa,
+      refreshPage
+    );
   }
 
   const [list, setList] = useState([]);
@@ -130,15 +166,15 @@ export default function Despesas() {
   const valorTotal = () => {
     let valor = 0;
     for (let i = 0; i < list.length; i++) {
-      valor = list[i].valor;
+      valor = list[i].value;
       valorT.push(valor);
     }
   };
-  
+
   valorTotal();
 
   const despesaTotal = valorT.reduce((total, numero) => total + numero, 0);
- 
+
   useEffect(() => {
     getDespesas()
       .then((result) => {
@@ -147,12 +183,17 @@ export default function Despesas() {
       .catch();
   }, []);
 
-console.log(list)
+  console.log(list);
 
-    const classes = useStyles();
+  const classes = useStyles();
 
-    return (
-      <>
+  function ConfirmDelete(i){
+    setIdDel(i);
+    handleOpenDel()
+  }
+
+  return (
+    <>
       <div className="bg-white-500 pt-14 pb-28 px-3 md:px-8 h-auto">
         <div className="container mx-auto max-w-full">
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
@@ -223,70 +264,77 @@ console.log(list)
                 }}
               >
                 <Fade in={open}>
-
                   <div className={classes.paper}>
+                    <h2
+                      style={{
+                        fontSize: 30,
+                        fontFamily: "monospace",
+                        textAlign: "center",
+                        backgroundColor: constantes.colors.despesas,
+                        color: "#fff",
+                        borderRadius: 10,
+                      }}
+                      id="transition-modal-title"
+                    >
+                      Nova Despesa
+                    </h2>
 
-                    <h2 style={{
-                      fontSize: 30,
-                      fontFamily: 'monospace',
-                      textAlign: 'center',
-                      backgroundColor:  constantes.colors.despesas,
-                      color: '#fff',
-                      borderRadius: 10
-                    }} id="transition-modal-title">Nova Despesa</h2>
-
-                    <form className={[classes.root]} noValidate autoComplete="off" >
-
-                      <div style={{padding: 10}}>
-
-                        <TextField 
-                          id="standard-basic" 
+                    <form
+                      className={[classes.root]}
+                      noValidate
+                      autoComplete="off"
+                    >
+                      <div style={{ padding: 10 }}>
+                        <TextField
+                          id="standard-basic"
                           label="Descrição"
-                          style={{width: '100%', marginBottom: 10}} 
+                          style={{ width: "100%", marginBottom: 10 }}
                           onChange={(e) => setDescDespesa(e.target.value)}
-                          />
+                        />
 
                         <TextField
                           id="date"
                           label="Data"
                           type="date"
-                          style={{width: '100%', marginBottom: 10,}}
-                          defaultValue= {new Date()}
+                          style={{ width: "100%", marginBottom: 10 }}
+                          defaultValue={new Date()}
                           InputLabelProps={{
                             shrink: true,
                           }}
                           onChange={(e) => setDataDespesa(e.target.value)}
-                          />
-                                           
-                     
+                        />
 
-                          <TextField 
-                          id="standard-basic" 
+                        <TextField
+                          id="standard-basic"
                           label="Valor"
-                          style ={{width: '40%', marginRight: '10%', marginBottom: 10}}
-                        onChange={(e) => setValorDespesa(e.target.value)} />
+                          style={{
+                            width: "40%",
+                            marginRight: "10%",
+                            marginBottom: 10,
+                          }}
+                          onChange={(e) => setValorDespesa(e.target.value)}
+                        />
 
-                      <TextField
-                        id="standard-select-currency"
-                        select
-                        label="Status"
-                        value={statusDespesa}
-                        onChange={handleChange}
-                        style={{width: '40%',marginRight: 32, marginBottom: 10}} 
-                      >
-                        {status.map((option) => (
-                          <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                          </MenuItem>
-                        ))}
-                      </TextField>
-
-                  
-                
-
-
+                        <TextField
+                          id="standard-select-currency"
+                          select
+                          label="Status"
+                          value={statusDespesa}
+                          onChange={handleChange}
+                          style={{
+                            width: "40%",
+                            marginRight: 32,
+                            marginBottom: 10,
+                          }}
+                        >
+                          {status.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                              {option.label}
+                            </MenuItem>
+                          ))}
+                        </TextField>
                       </div>
-                      <div style={{marginRight: '12%', marginLeft: '12%'}}>
+                      <div style={{ marginRight: "12%", marginLeft: "12%" }}>
                         <Button
                           variant="contained"
                           color="secondary"
@@ -306,7 +354,6 @@ console.log(list)
                           Salvar
                         </Button>
                       </div>
-
                     </form>
                   </div>
                 </Fade>
@@ -330,19 +377,20 @@ console.log(list)
                   <TableBody>
                     {list.map((row, i) => (
                       <TableRow key={row.id}>
-
                         <TableCell align="center" component="th" scope="row">
-                          {row.descricao}
+                          {row.describe}
                         </TableCell>
 
                         <TableCell align="center">
-                          {moment(new Date(row.data))
+                          {moment(new Date(row.date))
                             .locale("pt-br")
                             .format("ddd, D [de] MMMM [de] YYYY")}
                         </TableCell>
-                        <TableCell align="center">{row.valor}</TableCell>
+                        <TableCell align="center">{row.value}</TableCell>
 
-                        <TableCell align="center">{row.paga === 1 ? 'Paga' : 'Pendente'}</TableCell>
+                        <TableCell align="center">
+                          {row.pay === 1 ? "Paga" : "Pendente"}
+                        </TableCell>
 
                         <TableCell align="center">
                           <Button
@@ -356,6 +404,7 @@ console.log(list)
                             style={{ margin: "5px" }}
                             variant="contained"
                             color="secondary"
+                            onClick={() => ConfirmDelete(row.id)}
                           >
                             <DeleteIcon />
                           </Button>
@@ -369,6 +418,47 @@ console.log(list)
           </div>
         </div>
       </div>
+
+      <Modal
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                className={classes.modal}
+                open={openDel}
+                onClose={handleCloseDel}
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                  timeout: 500,
+                }}
+              >
+
+     {/* </Modal> <Modal open={openDel} onClose={handleCloseDel}> */}
+        <div style={modalStyle} className={classes.paperTwo}>
+          <center>
+            <h1 style={{ fontSize: 25, margin: 15 }}>
+              Deseja Realmente Excluir?
+            </h1>
+
+            <Button
+              style={{ margin: "5px" }}
+              variant="contained"
+              color="secondary"
+              onClick={handleCloseDel}
+            >
+              NÃO
+            </Button>
+
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ margin: "5px" }}
+              onClick={()=> alert(idDel)} 
+            >
+              SIM
+            </Button>
+          </center>
+        </div>
+      </Modal>
     </>
-    );
+  );
 }

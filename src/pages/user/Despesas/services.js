@@ -22,12 +22,12 @@ export async function postDespesa(
     .post(
       `/despesas`,
       {
-        usuario: localStorage.getItem(ID),
-        descricao: desc,
-        data: date,
-        valor: valor,
-        paga: status,
-        frequencia: "Recorrente",
+        user: localStorage.getItem(ID),
+        describe: desc,
+        date: date,
+        value: valor,
+        pay: status,
+        frequency: "Recorrente",
       },
       {
         headers: { Authorization: `token ${token}` },
