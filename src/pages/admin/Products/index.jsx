@@ -170,7 +170,7 @@ export default function Vendas() {
       <div className="px-3 md:px-8 h-auto -mt-24">
         <div className="container mx-auto max-w-full">
           <div className="grid grid-cols-1 px-4 mb-16">
-            <TableCard title="Usuários" color={constantes.colors.primary}>
+            <TableCard title="Produtos" color={constantes.colors.primary}>
               <ButtonT
                 color={"teal"}
                 buttonType="filled"
@@ -182,7 +182,7 @@ export default function Vendas() {
                 ripple="light"
                 onClick={handleOpen}
               >
-                Novo Usuário
+                Novo Produto
               </ButtonT>
 
               <Modal
@@ -298,12 +298,11 @@ export default function Vendas() {
                   <TableHead>
                     <TableRow>
                       <TableCell align="center">ID</TableCell>
-                      <TableCell align="center">TIPO</TableCell>
-                      <TableCell align="center">CPF</TableCell>
                       <TableCell align="center">NOME</TableCell>
-                      <TableCell align="center">EMAIL</TableCell>
-                      <TableCell align="center">LOCALIDADE</TableCell>
-                      <TableCell align="center">SITUAÇÃO</TableCell>
+                      <TableCell align="center">DESCRIÇÃO</TableCell>
+                      <TableCell align="center">CATEGORIA</TableCell>
+                      <TableCell align="center">UNIDADE</TableCell>
+                      <TableCell align="center">VALUE</TableCell>
                       <TableCell align="center">OPÇÕES</TableCell>
                     </TableRow>
                   </TableHead>
@@ -313,12 +312,11 @@ export default function Vendas() {
                         <TableCell align="center" component="th" scope="row">
                           {row.id}
                         </TableCell>
-                        <TableCell align="center">{row.admin === 0 ?  'Padrão' : 'Adm'}</TableCell>
-                        <TableCell align="center">{row.cpf}</TableCell>
-                        <TableCell align="center">{`${row.nome}  ${row.sobrenome === null ? '' : row.sobrenome }`}</TableCell>
-                        <TableCell align="center">{row.email}</TableCell>
-                        <TableCell align="center">{row.localidade}</TableCell>
-                        <TableCell align="center">{row.ativa === 0 ? 'Desativada' : 'Ativa'}</TableCell>
+                        <TableCell align="center">{row.name}</TableCell>
+                        <TableCell align="center">{row.description}</TableCell>
+                        <TableCell align="center">{row.category}</TableCell>
+                        <TableCell align="center">{row.unit}</TableCell>
+                        <TableCell align="center">{row.value}</TableCell>
                         
 
                         <TableCell align="center">

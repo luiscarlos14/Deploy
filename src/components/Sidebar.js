@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import AdminNavbar from "./AdminNavbar";
+import Navbar from "./Navbar";
 import Icon from "@material-tailwind/react/Icon";
 
 import LogoRural from "../assets/img/ruralD.png";
@@ -16,7 +16,7 @@ export default function Sidebar() {
   const [showSidebar, setShowSidebar] = useState("-left-64");
   return (
     <>
-      <AdminNavbar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
+      <Navbar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
 
       <div
         className={`h-screen fixed top-0 md:left-0 ${showSidebar} overflow-y-auto flex-row flex-nowrap overflow-hidden shadow-xl bg-white w-64 z-10 py-4 px-6 transition-all duration-300`}

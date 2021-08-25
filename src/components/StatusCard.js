@@ -16,7 +16,7 @@ export default function StatusCard({
     date,
 }) {
     return (
-        <div className="px-4 mb-10">
+        <div className="px-3 mb-10">
             <Card>
                 <CardRow>
                     <CardHeader color={color} iconOnly className="mb-0">

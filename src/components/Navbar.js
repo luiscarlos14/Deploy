@@ -78,7 +78,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
                                 buttonType="link"
                                 ripple="dark"
                                 type='submit'
-                                onClick={() => (window.location.href = "/profile")}>
+                                onClick={() => (window.location.href = "/perfil")}>
                                 Perfil
                                 </Button>
 

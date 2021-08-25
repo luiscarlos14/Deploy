@@ -122,7 +122,7 @@ export default function Insumos() {
   const valorTotal = () => {
     let valor = 0;
     for (let i = 0; i < list.length; i++) {
-      valor = list[i].valor;
+      valor = list[i].value;
       valorT.push(valor);
     }
   };
@@ -362,7 +362,7 @@ const handleChange = (event) => {
                       <TableRow key={row.id}>
 
                         <TableCell align="center" component="th" scope="row">
-                          {row.describe}
+                          {row.description}
                         </TableCell>
 
                         <TableCell align="center">

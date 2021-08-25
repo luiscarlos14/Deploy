@@ -5,7 +5,7 @@ const id = localStorage.getItem(ID);
 
 export async function getDespesas(){
     
-    const res = (await api.get(`/despesas/${id}`, { 
+    const res = (await api.get(`/expenditures/${id}`, { 
       headers: { Authorization: `token ${token}`}},
       )).data.response;
     return res;
@@ -20,10 +20,10 @@ export async function postDespesa(
 ) {
   await api
     .post(
-      `/despesas`,
+      `/expenditures`,
       {
         user: localStorage.getItem(ID),
-        describe: desc,
+        description: desc,
         date: date,
         value: valor,
         pay: status,
@@ -34,6 +34,16 @@ export async function postDespesa(
       }
     )
     .then(() => {
-      refreshPage(200);
+      refreshPage(200, "despesa");
     });
+}
+
+
+export async function deleteDespesa(id, refreshPage){
+  await api.delete(`expenditures/${id}`,{
+    headers: { Authorization: `token ${token}` },
+  }).then(()=>{
+    refreshPage(200, "delete");
+  })
+
 }

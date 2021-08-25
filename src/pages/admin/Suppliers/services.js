@@ -5,7 +5,7 @@ const token = sessionStorage.getItem(TOKEN_KEY);
 
 export async function getUsers(){
     
-    const res = (await api.get(`/usuarios/`, { 
+    const res = (await api.get(`/suppliers`, { 
       headers: { Authorization: `token ${token}`}},
       )).data.response;
     return res;

@@ -5,7 +5,7 @@ const id = localStorage.getItem(ID);
 
 export async function getInsumos(){
     
-    const res = (await api.get(`/insumos/${id}`, { 
+    const res = (await api.get(`/inputs/${id}`, { 
       headers: { Authorization: `token ${token}`}},
       )).data.response;
     return res;

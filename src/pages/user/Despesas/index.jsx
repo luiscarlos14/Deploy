@@ -7,7 +7,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import CreateIcon from "@material-ui/icons/Create";
 import Button from "@material-ui/core/Button";
 
-import { getDespesas, postDespesa } from "./services";
+import { getDespesas, postDespesa, deleteDespesa } from "./services";
 
 import React, { useEffect, useState } from "react";
 import ButtonT from "@material-tailwind/react/Button";
@@ -105,58 +105,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Despesas() {
 
-  function refreshPage(status) {
-    if (status === 200) {
-      alert("Despesa inserida");
-      document.location.reload();
-    }
-  }
-
-  const [open, setOpen] = React.useState(false);
-  const [modalStyle] = React.useState(getModalStyle);
-  const [openDel, setOpenDel] = React.useState(false);
-
-  const [idDel, setIdDel] = useState();
-
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleOpenDel = () => {
-    setOpenDel(true);
-    
-  };
-
-  const handleCloseDel = () => {
-    setOpenDel(false);
-  };
-
-  const handleChange = (event) => {
-    setStatusDespesa(event.target.value);
-  };
-
-  const [descDespesa, setDescDespesa] = useState("");
-  const [dataDespesa, setDataDespesa] = useState("");
-  const [statusDespesa, setStatusDespesa] = useState(0);
-  const [valorDespesa, setValorDespesa] = useState("");
-
- 
-
-  function saveDespesa() {
-    postDespesa(
-      descDespesa,
-      dataDespesa,
-      valorDespesa,
-      statusDespesa,
-      refreshPage
-    );
-  }
-
   const [list, setList] = useState([]);
 
   const totalDespesas = list.length;
@@ -185,12 +133,70 @@ export default function Despesas() {
 
   console.log(list);
 
-  const classes = useStyles();
 
-  function ConfirmDelete(i){
-    setIdDel(i);
-    handleOpenDel()
+
+
+  function refreshPage(status, request) {
+    if (status === 200 && request === "despesa") {
+      alert("Despesa inserida");
+      document.location.reload();
+    } else if (status === 200 && request === "delete") {
+      alert("Despesa Excluída");
+      document.location.reload();
+    }
   }
+
+  const [descDespesa, setDescDespesa] = useState("");
+  const [dataDespesa, setDataDespesa] = useState("");
+  const [statusDespesa, setStatusDespesa] = useState(0);
+  const [valorDespesa, setValorDespesa] = useState("");
+
+  function saveDespesa() {
+    postDespesa(
+      descDespesa,
+      dataDespesa,
+      valorDespesa,
+      statusDespesa,
+      refreshPage
+    );
+  }
+
+  const [open, setOpen] = React.useState(false);
+  const [modalStyle] = React.useState(getModalStyle);
+  const [openDel, setOpenDel] = React.useState(false);
+
+  const [idDel, setIdDel] = useState();
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpenDel = () => {
+    setOpenDel(true);
+  };
+
+  const handleCloseDel = () => {
+    setOpenDel(false);
+  };
+
+  const handleChange = (event) => {
+    setStatusDespesa(event.target.value);
+  };
+
+ 
+
+
+ 
+
+  function ConfirmDelete(i) {
+    setIdDel(i);
+    handleOpenDel();
+  }
+  const classes = useStyles();
 
   return (
     <>
@@ -198,7 +204,7 @@ export default function Despesas() {
         <div className="container mx-auto max-w-full">
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
             <StatusCard
-              color="pink"
+              color="blue"
               icon="trending_up"
               title="Total de Despesas"
               amount={`${totalDespesas}`}
@@ -220,9 +226,9 @@ export default function Despesas() {
             />
 
             <StatusCard
-              color="blue"
-              icon="poll"
-              title="Performance"
+              color="pink"
+              icon="money_off"
+              title="Despesas Pendentes"
               amount="49,65%"
               percentage="12"
               percentageIcon="arrow_upward"
@@ -378,7 +384,7 @@ export default function Despesas() {
                     {list.map((row, i) => (
                       <TableRow key={row.id}>
                         <TableCell align="center" component="th" scope="row">
-                          {row.describe}
+                          {row.description}
                         </TableCell>
 
                         <TableCell align="center">
@@ -420,19 +426,18 @@ export default function Despesas() {
       </div>
 
       <Modal
-                aria-labelledby="transition-modal-title"
-                aria-describedby="transition-modal-description"
-                className={classes.modal}
-                open={openDel}
-                onClose={handleCloseDel}
-                closeAfterTransition
-                BackdropComponent={Backdrop}
-                BackdropProps={{
-                  timeout: 500,
-                }}
-              >
-
-     {/* </Modal> <Modal open={openDel} onClose={handleCloseDel}> */}
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={openDel}
+        onClose={handleCloseDel}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        {/* </Modal> <Modal open={openDel} onClose={handleCloseDel}> */}
         <div style={modalStyle} className={classes.paperTwo}>
           <center>
             <h1 style={{ fontSize: 25, margin: 15 }}>
@@ -452,7 +457,7 @@ export default function Despesas() {
               variant="contained"
               color="primary"
               style={{ margin: "5px" }}
-              onClick={()=> alert(idDel)} 
+              onClick={() => deleteDespesa(idDel, refreshPage)}
             >
               SIM
             </Button>

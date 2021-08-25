@@ -51,6 +51,16 @@ export default function Sidebar() {
                   Fornecedores
                 </NavLink>
               </li>
+              <li className="rounded-lg mb-2 ">
+                <NavLink
+                  to="/products"
+                  className="flex items-center gap-4 text-sm text-gray-700 font-light px-4 py-3 rounded-lg"
+                  activeClassName="bg-gradient-to-tr from-light-green-500 to-green-700 text-white shadow-md"
+                >
+                  <Icon name="shop" size="2xl" />
+                  Produtos
+                </NavLink>
+              </li>
               <li className="rounded-lg mb-2 text-gray-700">
                 <NavLink
                   to="/maps"
@@ -60,50 +70,6 @@ export default function Sidebar() {
                   <Icon name="map" size="2xl" />
                   Maps
                 </NavLink>
-              </li>
-              <li className="px-4 rounded-lg mb-2 text-gray-700">
-                <a
-                  href="https://demos.creative-tim.com/material-tailwind-kit-react/#/login"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center gap-4 text-sm font-light py-3"
-                >
-                  <Icon name="fingerprint" size="2xl" />
-                  Login
-                </a>
-              </li>
-              <li className="px-4 rounded-lg mb-2 text-gray-700">
-                <a
-                  href="https://demos.creative-tim.com/material-tailwind-kit-react/#/register"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center gap-4 text-sm font-light py-3"
-                >
-                  <Icon name="list_alt" size="2xl" />
-                  Register
-                </a>
-              </li>
-              <li className="px-4 rounded-lg mb-2 text-gray-700">
-                <a
-                  href="https://demos.creative-tim.com/material-tailwind-kit-react/#/landing"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center gap-4 text-sm font-light py-3"
-                >
-                  <Icon name="web" size="2xl" />
-                  Landing Page
-                </a>
-              </li>
-              <li className="px-4 rounded-lg mb-2 text-gray-700">
-                <a
-                  href="https://demos.creative-tim.com/material-tailwind-kit-react/#/profile"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center gap-4 text-sm font-light py-3"
-                >
-                  <Icon name="account_circle" size="2xl" />
-                  Profile Page
-                </a>
               </li>
             </ul>
           </div>

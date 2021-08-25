@@ -5,12 +5,13 @@ const id = localStorage.getItem(ID)
 
 export async function getVendas() {
   const res = (
-    await api.get(`/vendas/${id}`, {
+    await api.get(`/sales/${id}`, {
       headers: { Authorization: `token ${token}` },
     })
   ).data.response;
   return res;
 }
+
 
 export async function postVenda(
   desc,
@@ -21,17 +22,18 @@ export async function postVenda(
   unidade,
   refreshPage
 ) {
+
+ 
   await api
     .post(
-      `/vendas`,
+      `/sales`,
       {
         user: localStorage.getItem(ID),
-        describe: desc,
+        description: desc,
         date: date,
         buyer: comprador,
         quantity: qtd,
         value: valor,
-        number: '1',
         unit: unidade,
         frequency: "Recorrente",
       },
@@ -40,6 +42,16 @@ export async function postVenda(
       }
     )
     .then(() => {
-      refreshPage(200);
+      refreshPage(200, "venda");
     });
+}
+
+
+export async function deleteVenda(id, refreshPage){
+  await api.delete(`sales/${id}`,{
+    headers: { Authorization: `token ${token}` },
+  }).then(()=>{
+    refreshPage(200, "delete");
+  })
+
 }
