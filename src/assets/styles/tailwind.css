@@ -2670,6 +2670,10 @@ video {
 .bg-landing-background{
 	background-image: linear-gradient(rgba(0,0,0, 0.75), rgba(0,0,0, 0.75)), url("../background-tech.jpg");
 }
+.backgroundRegister{
+    background-image: url("../background-tech.jpg");
+    background-color: aqua;
+}
 .hover\:text-gray-900:hover{
 	--tw-text-opacity: 1;
 	color: rgba(17, 24, 39, var(--tw-text-opacity));
