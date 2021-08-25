@@ -202,7 +202,7 @@ export default function Despesas() {
     <>
       <div className="bg-white-500 pt-14 pb-28 px-3 md:px-8 h-auto">
         <div className="container mx-auto max-w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
+          <div style={{ marginTop: "3%" }} className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
             <StatusCard
               color="blue"
               icon="trending_up"
@@ -241,7 +241,7 @@ export default function Despesas() {
 
       <div className="px-3 md:px-8 h-auto -mt-24">
         <div className="container mx-auto max-w-full">
-          <div className="grid grid-cols-1 px-4 mb-16">
+          <div style={{ marginTop: "10%" }} className="grid grid-cols-1 px-4 mb-16">
             <TableCard title="Despesas" color={constantes.colors.despesas}>
               <ButtonT
                 color={"red"}

@@ -127,47 +127,8 @@ export default function Vendas() {
 
   return (
     <>
-      <div className="bg-white-500 pt-14 pb-28 px-3 md:px-8 h-auto">
-        <div className="container mx-auto max-w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
-            <StatusCard
-              color="pink"
-              icon="trending_up"
-              title="Total de Usuários"
-              amount={`${totalUsers}`}
-              percentage="3.48 %"
-              percentageIcon="arrow_upward"
-              percentageColor="green"
-              date="Mês Passado"
-            />
-            <StatusCard
-              color="purple"
-              icon="paid"
-              title="Ganho Total"
-              // eslint-disable-next-line no-useless-concat
-             // amount={"R$ " + `${ganhoTotal}`}
-             amount='55'
-              percentage="3.48"
-              percentageIcon="arrow_downward"
-              percentageColor="red"
-              date="Since last week"
-            />
-
-            <StatusCard
-              color="blue"
-              icon="poll"
-              title="Performance"
-              amount="49,65%"
-              percentage="12"
-              percentageIcon="arrow_upward"
-              percentageColor="green"
-              date="Since last month"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div className="px-3 md:px-8 h-auto -mt-24">
+       
+      <div style={{marginTop:'3%'}} className="px-3 md:px-8 h-auto -mt-24">
         <div className="container mx-auto max-w-full">
           <div className="grid grid-cols-1 px-4 mb-16">
             <TableCard title="Usuários" color={constantes.colors.primary}>
