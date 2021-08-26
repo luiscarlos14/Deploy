@@ -105,10 +105,18 @@ export default function SettingsForm() {
                   shrink: true,
                 }}
                 value={cpf}
-                onChange={(e)=> setCPF(e.target.value)}
+                helperText="O CPF não pode ser modificado!"
+
               />
             </div>
           </div>
+          <div style= {{marginTop: '1px'}} >
+                  
+                        <Button color="green" buttonType="default" ripple="dark"  onClick={() => EditInfoPersonal(cpf, name, surname)}>
+                            Confirmar Alterações
+                        </Button>
+                 
+                </div>
 
           <h6 className="text-green-500 text-sm my-6 font-light uppercase">
             Endereço
@@ -167,6 +175,13 @@ export default function SettingsForm() {
               /> 
             </div>
           </div>
+          <div style= {{marginTop: '1px'}}>
+                   
+                        <Button color="green" buttonType="default" ripple="dark" onClick={() => EditInfoAddress(street, neighborhood, city, cep)}>
+                            Confirmar Alterações
+                        </Button>
+             
+                </div>
 
           <h6 className="text-green-500 text-sm my-6 font-light uppercase">
             Informações de Acesso
@@ -182,7 +197,7 @@ export default function SettingsForm() {
                   shrink: true,
                 }}
                 value={email}
-                helperText="Não é possivel modificar o email."
+                onChange={(e)=> setEmail(e.target.value)}
                 
               />
             </div>
@@ -207,18 +222,80 @@ export default function SettingsForm() {
           </div>
         </form>
 
-        <div style= {{marginTop: '1px'}} className="w-full flex justify-center -mt-8">
-                    <a
-                        href="#pablo"
-                        className="mt-5"
-                        onClick={(e) => e.preventDefault()}
-                    >
+        <div style= {{marginTop: '1px'}} >
+                    
                         <Button color="green" buttonType="default" ripple="dark">
                             Confirmar Alterações
                         </Button>
-                    </a>
+               
                 </div>
       </CardBody>
     </Card>
   );
+}
+
+function refreshPage(status, request) {
+  if (status === 200 && request === "personal") {
+    alert("Informações Pessoas Atualizadas!");
+    document.location.reload();
+  } else if (status === 200 && request === "address") {
+    alert("Endereço atualizado");
+    document.location.reload();
+  }
+}
+
+
+const token = sessionStorage.getItem(TOKEN_KEY);
+const id = localStorage.getItem(ID)
+
+async function EditInfoPersonal(
+  cpf,
+  name,
+  surname,
+) {
+  await api
+    .put(
+      `/users/personal`,
+      {
+        cpf: cpf,
+        name: name,
+        surname: surname,
+        id: id,
+      },
+      {
+        headers: { Authorization: `token ${token}` },
+      }
+    )
+    .then(() => {
+      refreshPage(200, "personal");
+    }).catch((error) => {
+      console.log(error)
+    })
+}
+
+async function EditInfoAddress(
+  street,
+  neighborhood,
+  city,
+  cep, 
+) {
+  await api
+    .patch(
+      `/users/address`,
+      {
+        street: street,
+        neighborhood: neighborhood,
+        city: city,
+        cep: cep,
+        id: id,
+      },
+      {
+        headers: { Authorization: `token ${token}` },
+      }
+    )
+    .then(() => {
+      alert("Informações Pessoas Atualizadas!");
+    }).catch((error) => {
+      console.log(error)
+    })
 }

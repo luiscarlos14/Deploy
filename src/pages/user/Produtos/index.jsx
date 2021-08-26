@@ -9,8 +9,9 @@ const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
     flex: 1,
+    flexDirection: 'row',
     justifyContent:'center',
-    flexWrap: 'wrap',
+    flexWrap: 'wrap'
   }
  
 }));

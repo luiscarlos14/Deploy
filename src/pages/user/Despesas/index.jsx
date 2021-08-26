@@ -104,7 +104,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Despesas() {
-
   const [list, setList] = useState([]);
 
   const totalDespesas = list.length;
@@ -132,9 +131,6 @@ export default function Despesas() {
   }, []);
 
   console.log(list);
-
-
-
 
   function refreshPage(status, request) {
     if (status === 200 && request === "despesa") {
@@ -187,11 +183,6 @@ export default function Despesas() {
     setStatusDespesa(event.target.value);
   };
 
- 
-
-
- 
-
   function ConfirmDelete(i) {
     setIdDel(i);
     handleOpenDel();
@@ -200,48 +191,65 @@ export default function Despesas() {
 
   return (
     <>
-      <div className="bg-white-500 pt-14 pb-28 px-3 md:px-8 h-auto">
-        <div className="container mx-auto max-w-full">
-          <div style={{ marginTop: "3%" }} className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
-            <StatusCard
-              color="blue"
-              icon="trending_up"
-              title="Total de Despesas"
-              amount={`${totalDespesas}`}
-              percentage="3.48 %"
-              percentageIcon="arrow_upward"
-              percentageColor="green"
-              date="Mês Passado"
-            />
-            <StatusCard
-              color="purple"
-              icon="paid"
-              title="Despesa Total"
-              // eslint-disable-next-line no-useless-concat
-              amount={"R$ " + `${despesaTotal}`}
-              percentage="3.48"
-              percentageIcon="arrow_downward"
-              percentageColor="red"
-              date="Since last week"
-            />
-
-            <StatusCard
-              color="pink"
-              icon="money_off"
-              title="Despesas Pendentes"
-              amount="49,65%"
-              percentage="12"
-              percentageIcon="arrow_upward"
-              percentageColor="green"
-              date="Since last month"
-            />
-          </div>
+      <div
+        style={{
+          display: "flex",
+          flex: 1,
+          flexWrap:'wrap',
+          justifyContent: "center",
+          alignItems: 'center',
+          width: "100%",
+          paddingLeft: '5%',
+          paddingRight: '5%',
+          marginTop: "3%",
+        }}
+      >
+        <div style={{flex:1}}>
+        <StatusCard
+  
+          color="blue"
+          icon="trending_up"
+          title="Total de Despesas"
+          amount={`${totalDespesas}`}
+          percentage="3.48 %"
+          percentageIcon="arrow_upward"
+          percentageColor="green"
+          date="Mês Passado"
+        />
+        </div>
+        <div style={{flex:1}}>
+        <StatusCard
+          color="purple"
+          icon="paid"
+          title="Despesa Total"
+          // eslint-disable-next-line no-useless-concat
+          amount={"R$ " + `${despesaTotal}`}
+          percentage="3.48"
+          percentageIcon="arrow_downward"
+          percentageColor="red"
+          date="Since last week"
+        />
+</div>
+<div style={{flex:1}}>
+        <StatusCard
+          color="pink"
+          icon="money_off"
+          title="Despesas Pendentes"
+          amount="49,65%"
+          percentage="12"
+          percentageIcon="arrow_upward"
+          percentageColor="green"
+          date="Since last month"
+        />
         </div>
       </div>
 
       <div className="px-3 md:px-8 h-auto -mt-24">
         <div className="container mx-auto max-w-full">
-          <div style={{ marginTop: "10%" }} className="grid grid-cols-1 px-4 mb-16">
+          <div
+            style={{ marginTop: "10%" }}
+            className="grid grid-cols-1 px-4 mb-16"
+          >
             <TableCard title="Despesas" color={constantes.colors.despesas}>
               <ButtonT
                 color={"red"}

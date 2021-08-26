@@ -16,8 +16,8 @@ export default function StatusCard({
     date,
 }) {
     return (
-        <div className="px-3 mb-10">
-            <Card>
+        <div  className="px-5 mb-10">
+            <Card style={{width: 300}}>
                 <CardRow>
                     <CardHeader color={color} iconOnly className="mb-0">
                         <Icon name={icon} size="3xl" color="white" />
