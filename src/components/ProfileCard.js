@@ -23,12 +23,14 @@ async function getUser(){
 }
 
 
-export default function ProfileCard() {
+export default function ProfileCard(props) {
 
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [neighborhood, setNeighborhood] = useState('');
     const [city, setCity] = useState('');
+
+    const Perfil = props.photo === "" ? "https://cdn.pixabay.com/photo/2018/08/28/13/29/avatar-3637561_960_720.png" : props.photo
 
     useEffect(() => {
         getUser()
@@ -45,7 +47,7 @@ export default function ProfileCard() {
         <Card>
             <div className="flex flex-wrap justify-center">
                 <div className="w-48 px-4 -mt-24">
-                    <Image src={ProfilePicture} rounded raised />
+                    <Image src={Perfil} rounded raised />
                 </div>
             </div>
            

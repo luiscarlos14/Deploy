@@ -60,7 +60,6 @@ export async function EditVenda(
     .patch(
       `/sales`,
       {
-        user: localStorage.getItem(ID),
         description: desc,
         date: date,
         buyer: comprador,

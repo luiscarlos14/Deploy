@@ -23,7 +23,7 @@ export async function postFuncionarios(
 ) {
   await api
     .post(
-      `/functionarys`,
+      "/functionarys",
       {
         employer: localStorage.getItem(ID),
         name: name,
@@ -56,7 +56,7 @@ export async function editFuncionarios(
 ) {
   await api
     .patch(
-      `/functionarys`,
+      "/functionarys",
       {
         name: name,
         wage: wage,

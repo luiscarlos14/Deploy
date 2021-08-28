@@ -49,6 +49,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const MediaCard = (props) => {
+  const foto = props.photo === null ? "https://images.tcdn.com.br/img/img_prod/696987/fosfato_monoamonico_map_dripsol_sqm_sc_25kg_263_1_20191116163351.jpg" : props.photo
   const classes = useStyles();
 
   const [expanded, setExpanded] = React.useState(false);
@@ -61,11 +62,10 @@ const MediaCard = (props) => {
     <Card className={classes.root}>
       <CardActionArea>
         <CardMedia
+          style={{width: '90%', height: '90%', justifyContent: 'center', alignItems:'center'}}
           className={classes.media}
-          image={
-            "https://images.tcdn.com.br/img/img_prod/696987/fosfato_monoamonico_map_dripsol_sqm_sc_25kg_263_1_20191116163351.jpg"
-          }
-          title="Contemplative Reptile"
+          image={foto}
+          title="Imagem do Produto"
         />
 
         {/* <Image source={{uri: "https://images.tcdn.com.br/img/img_prod/696987/fosfato_monoamonico_map_dripsol_sqm_sc_25kg_263_1_20191116163351.jpg"}} />

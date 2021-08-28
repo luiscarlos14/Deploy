@@ -5,7 +5,7 @@ import TableCard from "components/TableCard";
 import "date-fns";
 
 import React, { useEffect, useState } from "react";
-import { getVendas, postVenda, EditVenda, deleteVenda } from "./services";
+import { getFuncionarios, postFuncionarios, editFuncionarios, deleteFuncionario } from "./services";
 import constantes from "constantes";
 
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -113,7 +113,7 @@ const unidades = [
   },
 ];
 
-export default function Vendas() {
+export default function Funcionarios() {
   const [list, setList] = useState([]);
 
   const totalVendas = list.length;
@@ -123,7 +123,7 @@ export default function Vendas() {
   const valorTotal = () => {
     let valor = 0;
     for (let i = list.length - 1; i >= 0; i--) {
-      valor = list[i].value * list[i].quantity;
+      valor = list[i].Workeddays * list[i].wage;
       valorT.push(valor);
     }
   };
@@ -136,7 +136,7 @@ export default function Vendas() {
 
   const ganhoTotal = valorT.reduce((total, numero) => total + numero, 0);
   useEffect(() => {
-    getVendas()
+    getFuncionarios()
       .then((result) => {
         setList(result);
       })
@@ -145,42 +145,45 @@ export default function Vendas() {
 
   function refreshPage(status, request) {
     if (status === 200 && request === "adicionado") {
-      alert("Venda Inserida");
+      alert("Funcionário Inserido");
       document.location.reload();
     } else if (status === 200 && request === "deletado") {
-      alert("Venda Excluída");
+      alert("Funcionário Excluído");
       document.location.reload();
     } else if (status === 200 && request === "editado") {
-      alert("Venda Editada");
+      alert("Funcionário Editado");
       document.location.reload();
     }
   }
 
-  const [descVenda, setDescVenda] = useState("");
-  const [dataVenda, setDataVenda] = useState("");
-  const [unidade, setUnidade] = useState("KG");
-  const [qtdVenda, setQtdVenda] = useState("");
-  const [valorVenda, setValorVenda] = useState("");
-  const [comprador, setComprador] = useState("");
+  const [name, setName] = useState("");
+  const [diaria, setDiaria] = useState("");
+  const [diasTrabalhados, setDiasTrabalhados] = useState("KG");
+  const [rua, setRua] = useState("");
+  const [cidade, setCidade] = useState("");
+  const [estado, setEstado] = useState("");
+  const [cep, setCep] = useState("");
 
-  function saveVenda() {
+  function saveFuncionario() {
     if (
-      descVenda === "" ||
-      dataVenda === "" ||
-      comprador === "" ||
-      qtdVenda === "" ||
-      valorVenda === "" ||
-      unidade === ""
+        name === "" ||
+        diaria === "" ||
+        diasTrabalhados === "" ||
+        rua === "" ||
+        estado === "" ||
+        cidade === "" ||
+        cep === ""
     ) {
       alert("Preencha todos os campos!");
     } else {
-      postVenda(
-        descVenda,
-        new Date(dataVenda),
-        comprador,
-        qtdVenda,
-        valorVenda,
-        unidade,
+      postFuncionarios(
+        name,
+        diaria,
+        diasTrabalhados,
+        rua,
+        estado,
+        cidade,
+        cep,
         refreshPage
       );
     }
@@ -216,9 +219,9 @@ export default function Vendas() {
     setOpenDel(false);
   };
 
-  const handleChange = (event) => {
+ /*  const handleChange = (event) => {
     setUnidade(event.target.value);
-  };
+  }; */
 
   function ConfirmDelete(i) {
     setIdDel(i);
@@ -228,39 +231,43 @@ export default function Vendas() {
   function ConfirmEdit(i) {
     for (let cont = 0; cont < list.length; cont++) {
       if (list[cont].id === i) {
-        setDescEdit(list[cont].description);
-        setDataEdit(list[cont].date);
-        setUniEdit(list[cont].unit);
-        setQtdEdit(list[cont].quantity);
-        setValorEdit(list[cont].value);
-        setCompradorEdit(list[cont].buyer);
-        setIdEdit(list[cont].id);
+        setNameEdit(list[cont].name);
+        setDiariaEdit(list[cont].wage);
+        setDiasTrabalhadosEdit(list[cont].Workeddays);
+        setRuaEdit(list[cont].street);
+        setCidadeEdit(list[cont].city);
+        setEstadoEdit(list[cont].neighborhood);
+        setCepEdit(list[cont].cep);
+        setIdEdit(i);
       }
     }
 
     handleOpenEdit();
   }
 
-  function EditarVenda() {
-    EditVenda(
-      descEdit,
-      new Date(dataEdit),
-      compradorEdit,
-      qtdEdit,
-      valorEdit,
-      uniEdit,
+  function EditarFuncionario() {
+    editFuncionarios(
+      nameEdit,
+      diariaEdit,
+      diasTrabalhadosEdit,
+      ruaEdit,
+      estadoEdit,
+      cidadeEdit,
+      cepEdit,
       idEdit,
       refreshPage
     );
   }
 
-  const [descEdit, setDescEdit] = useState("");
-  const [dataEdit, setDataEdit] = useState("");
-  const [uniEdit, setUniEdit] = useState("");
-  const [qtdEdit, setQtdEdit] = useState("");
-  const [valorEdit, setValorEdit] = useState("");
-  const [compradorEdit, setCompradorEdit] = useState("");
+  const [nameEdit, setNameEdit] = useState("");
+  const [diariaEdit, setDiariaEdit] = useState("");
+  const [diasTrabalhadosEdit, setDiasTrabalhadosEdit] = useState("KG");
+  const [ruaEdit, setRuaEdit] = useState("");
+  const [cidadeEdit, setCidadeEdit] = useState("");
+  const [estadoEdit, setEstadoEdit] = useState("");
+  const [cepEdit, setCepEdit] = useState("");
   const [idEdit, setIdEdit] = useState("");
+  
 
   const classes = useStyles();
 
@@ -313,7 +320,7 @@ export default function Vendas() {
             style={{ marginTop: "10%" }}
             className="grid grid-cols-1 px-4 mb-16"
           >
-            <TableCard title="Vendas" color={constantes.colors.primary}>
+            <TableCard title="Funcionários" color={constantes.colors.primary}>
               <ButtonT
                 color={"teal"}
                 buttonType="filled"
@@ -353,7 +360,7 @@ export default function Vendas() {
                       }}
                       id="transition-modal-title"
                     >
-                      Nova Venda
+                      Novo Funcionário
                     </h2>
 
                     <form
@@ -364,64 +371,53 @@ export default function Vendas() {
                       <div style={{ padding: 10 }}>
                         <TextField
                           id="standard-basic"
-                          label="Descrição"
+                          label="Nome"
                           style={{ width: "100%", marginBottom: 10 }}
-                          onChange={(e) => setDescVenda(e.target.value)}
+                          onChange={(e) => setName(e.target.value)}
                         />
 
-                        <TextField
-                          id="date"
-                          label="Data"
-                          type="date"
-                          style={{ width: "100%", marginBottom: 10 }}
-                          defaultValue={new Date()}
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                          onChange={(e) => setDataVenda(e.target.value)}
-                        />
-
-                        <TextField
-                          id="standard-select-currency"
-                          select
-                          label="Unidade"
-                          value={unidade}
-                          onChange={handleChange}
-                          style={{
-                            width: "45%",
-                            marginRight: 32,
-                            marginBottom: 10,
-                          }}
-                        >
-                          {unidades.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                              {option.label}
-                            </MenuItem>
-                          ))}
-                        </TextField>
 
                         <TextField
                           id="standard-basic"
-                          label="Quantidade"
+                          label="Diária"
+                          style={{ width: "45%", marginRight: "10%", marginBottom: 10 }}
+                          onChange={(e) => setDiaria(e.target.value)}
+                        />
+
+                        <TextField
+                          id="standard-basic"
+                          label="Dias Trabalhados"
                           style={{ width: "45%", marginBottom: 10 }}
-                          onChange={(e) => setQtdVenda(e.target.value)}
+                          onChange={(e) => setDiasTrabalhados(e.target.value)}
                         />
 
                         <TextField
                           id="standard-basic"
-                          label="Valor Unidade"
+                          label="Endereço"
                           style={{ width: "100%", marginBottom: 10 }}
-                          onChange={(e) => setValorVenda(e.target.value)}
-                          helperText="Use o ponto invés da virgula!"
+                          onChange={(e) => setRua(e.target.value)}
                         />
 
-                        <TextField
+                          <TextField
                           id="standard-basic"
-                          label="Comprador"
-                          style={{ width: "100%", marginBottom: 10 }}
-                          onChange={(e) => setComprador(e.target.value)}
+                          label="Cidade"
+                          style={{ width: "45%", marginRight: "10%", marginBottom: 10 }}
+                          onChange={(e) => setCidade(e.target.value)}
+                        />
+                          <TextField
+                          id="standard-basic"
+                          label="Estado"
+                          style={{ width: "45%", marginBottom: 10 }}
+                          onChange={(e) => setEstado(e.target.value)}
+                        />
+                          <TextField
+                          id="standard-basic"
+                          label="Cep"
+                          style={{ width: "30%", marginBottom: 10 }}
+                          onChange={(e) => setCep(e.target.value)}
                         />
                       </div>
+
                       <div style={{ marginRight: "12%", marginLeft: "12%" }}>
                         <Button
                           variant="contained"
@@ -438,7 +434,7 @@ export default function Vendas() {
                           color="primary"
                           className={classes.button}
                           endIcon={<SaveIcon />}
-                          onClick={saveVenda}
+                          onClick={saveFuncionario}
                         >
                           Salvar
                         </Button>
@@ -448,12 +444,13 @@ export default function Vendas() {
                 </Fade>
               </Modal>
 
+              
               <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
                 className={classes.modal}
                 open={openEdit}
-                onClose={handleCloseEdit}
+                onClose={handleClose}
                 closeAfterTransition
                 BackdropComponent={Backdrop}
                 BackdropProps={{
@@ -473,7 +470,7 @@ export default function Vendas() {
                       }}
                       id="transition-modal-title"
                     >
-                      Editar Venda
+                      Editar Funcionário
                     </h2>
 
                     <form
@@ -484,16 +481,13 @@ export default function Vendas() {
                       <div style={{ padding: 10 }}>
                         <TextField
                           id="standard-basic"
-                          label="Descrição"
+                          label="Nome"
                           style={{ width: "100%", marginBottom: 10 }}
-                          onChange={(e) => setDescEdit(e.target.value)}
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                          value={descEdit}
+                          onChange={(e) => setNameEdit(e.target.value)}
+                          value={nameEdit}
                         />
 
-                        <TextField
+                     {/*    <TextField
                           id="date"
                           label="Data"
                           type="date"
@@ -502,15 +496,14 @@ export default function Vendas() {
                           InputLabelProps={{
                             shrink: true,
                           }}
-                          onChange={(e) => setDataEdit(e.target.value)}
-                          value={dataEdit}
-                        />
+                          onChange={(e) => setDataVenda(e.target.value)}
+                        /> */}
 
-                        <TextField
+                   {/*      <TextField
                           id="standard-select-currency"
                           select
                           label="Unidade"
-                          value={uniEdit}
+                          value={unidade}
                           onChange={handleChange}
                           style={{
                             width: "45%",
@@ -523,41 +516,56 @@ export default function Vendas() {
                               {option.label}
                             </MenuItem>
                           ))}
-                        </TextField>
+                        </TextField> */}
 
                         <TextField
                           id="standard-basic"
-                          label="Quantidade"
+                          label="Diária"
+                          style={{ width: "45%", marginRight: "10%", marginBottom: 10 }}
+                          onChange={(e) => setDiariaEdit(e.target.value)}
+                          value={diariaEdit}
+                        />
+
+                        <TextField
+                          id="standard-basic"
+                          label="Dias Trabalhados"
                           style={{ width: "45%", marginBottom: 10 }}
-                          onChange={(e) => setQtdEdit(e.target.value)}
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                          value={qtdEdit}
+                          onChange={(e) => setDiasTrabalhadosEdit(e.target.value)}
+                          value={diasTrabalhadosEdit}
+
                         />
 
                         <TextField
                           id="standard-basic"
-                          label="Valor Unidade"
+                          label="Endereço"
                           style={{ width: "100%", marginBottom: 10 }}
-                          onChange={(e) => setValorEdit(e.target.value)}
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                          value={valorEdit}
+                          onChange={(e) => setRuaEdit(e.target.value)}
+                          value={ruaEdit}
                         />
 
-                        <TextField
+                          <TextField
                           id="standard-basic"
-                          label="Comprador"
-                          style={{ width: "100%", marginBottom: 10 }}
-                          onChange={(e) => setCompradorEdit(e.target.value)}
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                          value={compradorEdit}
+                          label="Cidade"
+                          style={{ width: "45%", marginRight: "10%", marginBottom: 10 }}
+                          onChange={(e) => setCidadeEdit(e.target.value)}
+                          value={cidadeEdit}
+                        />
+                          <TextField
+                          id="standard-basic"
+                          label="Estado"
+                          style={{ width: "45%", marginBottom: 10 }}
+                          onChange={(e) => setEstadoEdit(e.target.value)}
+                          value={estadoEdit}
+                        />
+                          <TextField
+                          id="standard-basic"
+                          label="Cep"
+                          style={{ width: "30%", marginBottom: 10 }}
+                          onChange={(e) => setCepEdit(e.target.value)}
+                          value={cepEdit}
                         />
                       </div>
+
                       <div style={{ marginRight: "12%", marginLeft: "12%" }}>
                         <Button
                           variant="contained"
@@ -574,7 +582,7 @@ export default function Vendas() {
                           color="primary"
                           className={classes.button}
                           endIcon={<SaveIcon />}
-                          onClick={EditarVenda}
+                          onClick={EditarFuncionario}
                         >
                           Salvar
                         </Button>
@@ -592,13 +600,11 @@ export default function Vendas() {
                 >
                   <TableHead>
                     <TableRow>
-                      <TableCell align="center">Descrição</TableCell>
-                      <TableCell align="center">Data</TableCell>
-                      <TableCell align="center">Comprador</TableCell>
-                      <TableCell align="center">Quantidade</TableCell>
-                      <TableCell align="center">Valor</TableCell>
-                      <TableCell align="center">Unidade</TableCell>
-                      <TableCell align="center">Valor Total</TableCell>
+                      <TableCell align="center">Nome</TableCell>
+                      <TableCell align="center">Diária</TableCell>
+                      <TableCell align="center">Dias Trabalhados</TableCell>
+                      <TableCell align="center">Total Pago</TableCell>
+                      <TableCell align="center">Endereço</TableCell>
                       <TableCell align="center">Opções</TableCell>
                     </TableRow>
                   </TableHead>
@@ -609,18 +615,12 @@ export default function Vendas() {
                       .map((row, i) => (
                         <TableRow key={row.id}>
                           <TableCell align="center" component="th" scope="row">
-                            {row.description}
+                            {row.name}
                           </TableCell>
-                          <TableCell align="center">
-                            {moment(new Date(row.date))
-                              .locale("pt-br")
-                              .format(`ddd, DD [de] MMMM [de] YYYY`)}
-                          </TableCell>
-                          <TableCell align="center">{row.buyer}</TableCell>
-                          <TableCell align="center">{row.quantity}</TableCell>
-                          <TableCell align="center">{row.value}</TableCell>
-                          <TableCell align="center">{row.unit}</TableCell>
+                          <TableCell align="center">{row.wage}</TableCell>
+                          <TableCell align="center">{row.Workeddays}</TableCell>
                           <TableCell align="center">{getTotal(i)}</TableCell>
+                          <TableCell align="center">{`${row.street}, ${row.city}`}</TableCell>
 
                           <TableCell align="center">
                             <Button
@@ -682,7 +682,7 @@ export default function Vendas() {
               variant="contained"
               color="primary"
               style={{ margin: "5px" }}
-              onClick={() => deleteVenda(idDel, refreshPage)}
+              onClick={() => deleteFuncionario(idDel, refreshPage)}
             >
               SIM
             </Button>

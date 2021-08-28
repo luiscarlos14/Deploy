@@ -19,7 +19,7 @@ import "../assets/styles/tailwind.css";
 function User() {
   return (
     <>
-      <Sidebar />
+      <Sidebar/>
       <div className="md:ml-64">
         <Switch>
           <Route exact path="/" component={Dashboard} />

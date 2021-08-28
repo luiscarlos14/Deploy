@@ -63,7 +63,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
                                 color="transparent"
                                 buttonText={
                                     <div className="w-12">
-                                        <Image src={ProfilePicture} rounded />
+                                        <Image src={"https://cdn.pixabay.com/photo/2015/03/04/22/35/head-659651_960_720.png"} rounded />
                                     </div>
                                 }
                                 rounded

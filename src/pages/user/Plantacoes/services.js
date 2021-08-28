@@ -3,34 +3,27 @@ import api, { TOKEN_KEY, ID } from "../../../api";
 const token = sessionStorage.getItem(TOKEN_KEY);
 const id = localStorage.getItem(ID);
 
-export async function getInsumos(){
+export async function getPlantacao(){
     
-    const res = (await api.get(`/inputs/${id}`, { 
+    const res = (await api.get(`/plantations/${id}`, { 
       headers: { Authorization: `token ${token}`}},
       )).data.response;
     return res;
 }
 
-export async function postInsumos(
-  stock,
-  value,
+export async function postPlantacao(
   description,
-  purchase,
-  validity,
-  unit,
+  date,
   refreshPage
 ) {
   await api
     .post(
-      `/inputs`,
+      `/plantations`,
       {
         user: localStorage.getItem(ID),
-        stock: stock,
-        value: value,
+        pests: 0,
         description: description,
-        purchase: purchase,
-        validity: validity,
-        unit: unit
+        date: date,
       },
       {
         headers: { Authorization: `token ${token}` },
@@ -41,27 +34,20 @@ export async function postInsumos(
     });
 }
 
-export async function editInsumos(
-  stock,
-  value,
+export async function editPlantacao(
   description,
-  purchase,
-  validity,
-  unit,
+  date,
   id,
   refreshPage
  
 ) {
   await api
     .patch(
-      "/inputs",
+      "/plantations",
       {
-        stock: stock,
-        value: value,
+        pests: 0,
         description: description,
-        purchase: purchase,
-        validity: validity,
-        unit: unit,
+        date: date,
         id: id
       },
       {
@@ -74,11 +60,37 @@ export async function editInsumos(
 }
 
 
-export async function deleteInsumos(id, refreshPage){
-  await api.delete(`inputs/${id}`,{
+export async function deletePlantacao(id, refreshPage){
+  await api.delete(`plantations/${id}`,{
     headers: { Authorization: `token ${token}` },
   }).then(()=>{
     refreshPage(200, "deletado");
   })
 
+}
+
+
+export async function postPragas(
+  insecticide,
+  description,
+  identified,
+  fought,
+  refreshPage
+) {
+  await api
+    .post(
+      `/pests`,
+      {
+        insecticide: insecticide,
+        description: description,
+        identified: identified,
+        fought: fought,
+      },
+      {
+        headers: { Authorization: `token ${token}` },
+      }
+    )
+    .then(() => {
+      refreshPage(200, "pragasAdd");
+    });
 }

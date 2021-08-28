@@ -5,13 +5,14 @@ import constantes from "constantes";
 
 import DeleteIcon from "@material-ui/icons/Delete";
 import CreateIcon from "@material-ui/icons/Create";
+import BugReportIcon from "@material-ui/icons/BugReport";
 import Button from "@material-ui/core/Button";
 
 import {
-  getInsumos,
-  postInsumos,
-  editInsumos,
-  deleteInsumos,
+  getPlantacao,
+  postPlantacao,
+  editPlantacao,
+  deletePlantacao,
 } from "./services";
 
 import React, { useEffect, useState } from "react";
@@ -91,7 +92,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const unidades = [
+/* const unidades = [
   {
     value: "KG",
     label: "KG",
@@ -109,8 +110,8 @@ const unidades = [
     label: "SACO",
   },
 ];
-
-export default function Insumos() {
+ */
+export default function Plantacoes() {
   const [list, setList] = useState([]);
 
   const totalInsumos = list.length;
@@ -130,7 +131,7 @@ export default function Insumos() {
   const valorEstoque = valorT.reduce((total, numero) => total + numero, 0);
 
   useEffect(() => {
-    getInsumos()
+    getPlantacao()
       .then((result) => {
         setList(result);
       })
@@ -141,38 +142,28 @@ export default function Insumos() {
 
   function refreshPage(status, request) {
     if (status === 200 && request === "adicionado") {
-      alert("Insumo Inserida");
+      alert("Plantação Inserida");
       document.location.reload();
     } else if (status === 200 && request === "deletado") {
-      alert("Insumo Excluída");
+      alert("Plantação Excluída");
       document.location.reload();
     } else if (status === 200 && request === "editado") {
-      alert("Insumo Editada");
+      alert("Plantação Editada");
       document.location.reload();
     }
   }
 
-  const [descInsumos, setDescInsumos] = useState("");
-  const [unidade, setUnidade] = useState("KG");
-  const [dataCompraInsumo, setDataCompraInsumo] = useState("");
-  const [validadeInsumo, setValidadeInsumo] = useState("");
-  const [estoqueInsumo, setEstoqueInsumo] = useState("");
-  const [valueInsumo, setValueInsumo] = useState("");
+  const [descPlantacao, setDescPlantacao] = useState("");
+  //const [pests, setPests] = useState("KG");
+  const [date, setDate] = useState("");
 
-  function saveInsumo() {
-    postInsumos(
-      estoqueInsumo,
-      valueInsumo,
-      descInsumos,
-      dataCompraInsumo,
-      validadeInsumo,
-      unidade,
-      refreshPage
-    );
+  function savePlantacao() {
+    postPlantacao(descPlantacao, new Date(date), refreshPage);
   }
 
   const [open, setOpen] = React.useState(false);
   const [openEdit, setOpenEdit] = React.useState(false);
+  const [openBug, setOpenBug] = React.useState(false);
   const [modalStyle] = React.useState(getModalStyle);
   const [openDel, setOpenDel] = React.useState(false);
   const [idDel, setIdDel] = useState();
@@ -184,6 +175,14 @@ export default function Insumos() {
   const handleClose = () => {
     setOpen(false);
   };
+  /*  const handleOpenBug = () => {
+    setOpenBug(true);
+  }; */
+
+  const handleCloseBug = () => {
+    setOpenBug(false);
+  };
+
   const handleOpenEdit = () => {
     setOpenEdit(true);
   };
@@ -200,9 +199,9 @@ export default function Insumos() {
     setOpenDel(false);
   };
 
-  const handleChange = (event) => {
+  /*  const handleChange = (event) => {
     setUnidade(event.target.value);
-  };
+  }; */
 
   function ConfirmDelete(i) {
     setIdDel(i);
@@ -210,6 +209,18 @@ export default function Insumos() {
   }
 
   function ConfirmEdit(i) {
+    for (let cont = 0; cont < list.length; cont++) {
+      if (list[cont].id === i) {
+        setDescPlantacaoEdit(list[cont].description);
+        setDateEdit(list[cont].date);
+        setIdEdit(list[cont].id);
+      }
+    }
+
+    handleOpenEdit();
+  }
+
+  /* function AddBug(i) {
     for (let cont = 0; cont < list.length; cont++) {
       if (list[cont].id === i) {
         setDescInsumosEdit(list[cont].description);
@@ -221,73 +232,23 @@ export default function Insumos() {
       }
     }
 
-    handleOpenEdit();
+    handleOpenBug();
+  } */
+
+  function EditarPlantacao() {
+    editPlantacao(descPlantacaoEdit, new Date(dateEdit), idEdit, refreshPage);
   }
 
-  function EditarInsumo() {
-    editInsumos(
-      estoqueInsumoEdit,
-      valueInsumoEdit,
-      descInsumosEdit,
-      new Date(dataCompraInsumoEdit),
-      new Date(validadeInsumoEdit),
-      unidade,
-      idEdit,
-      refreshPage
-    );
-  }
+  const [descPlantacaoEdit, setDescPlantacaoEdit] = useState("");
+  const [dateEdit, setDateEdit] = useState("");
 
-  const [descInsumosEdit, setDescInsumosEdit] = useState("");
-  const [dataCompraInsumoEdit, setDataCompraInsumoEdit] = useState("");
-  const [validadeInsumoEdit, setValidadeInsumoEdit] = useState("");
-  const [estoqueInsumoEdit, setEstoqueInsumoEdit] = useState("");
-  const [valueInsumoEdit, setValueInsumoEdit] = useState("");
   const [idEdit, setIdEdit] = useState("");
 
   const classes = useStyles();
 
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          flex: 1,
-          flexWrap: "wrap",
-          justifyContent: "center",
-          alignItems: "center",
-          width: "100%",
-          paddingLeft: "5%",
-          paddingRight: "5%",
-          marginTop: "3%",
-        }}
-      >
-        <div style={{ flex: 1 }}>
-          <StatusCard
-            color="pink"
-            icon="trending_up"
-            title="Total de Insumos"
-            amount={`${totalInsumos}`}
-           // percentage="3.48 %"
-           // percentageIcon="arrow_upward"
-            //percentageColor="green"
-           /// date="Mês Passado"
-          />
-        </div>
-        <div style={{ flex: 1 }}>
-          <StatusCard
-            color="purple"
-            icon="paid"
-            title="Valor em Estoque"
-            // eslint-disable-next-line no-useless-concat
-            amount={"R$ " + `${valorEstoque}`}
-          ///  percentage="3.48"
-          ///  percentageIcon="arrow_downward"
-           //// percentageColor="red"
-           /// date="Since last week"
-          />
-        </div>
-      
-      </div>
+ 
 
       <div className="px-3 md:px-8 h-auto -mt-24">
         <div className="container mx-auto max-w-full">
@@ -295,7 +256,7 @@ export default function Insumos() {
             style={{ marginTop: "10%" }}
             className="grid grid-cols-1 px-4 mb-16"
           >
-            <TableCard title="Insumos" color={constantes.colors.insumos}>
+            <TableCard title="Plantações" color={constantes.colors.insumos}>
               <ButtonT
                 color={"purple"}
                 buttonType="filled"
@@ -307,7 +268,7 @@ export default function Insumos() {
                 ripple="light"
                 onClick={handleOpen}
               >
-                Adicionar Insumo
+                Adicionar Plantação
               </ButtonT>
 
               <Modal
@@ -335,7 +296,110 @@ export default function Insumos() {
                       }}
                       id="transition-modal-title"
                     >
-                      Novo Insumo
+                      Nova Plantação
+                    </h2>
+
+                    <form
+                      className={[classes.root]}
+                      noValidate
+                      autoComplete="off"
+                    >
+                      <div style={{ padding: 10 }}>
+                        <TextField
+                          id="standard-basic"
+                          label="Descrição"
+                          style={{ width: "100%", marginBottom: 10 }}
+                          onChange={(e) => setDescPlantacao(e.target.value)}
+                        />
+
+                        <TextField
+                          id="date"
+                          label="Data da Plantação"
+                          type="date"
+                          style={{
+                            width: "45%",
+                            marginRight: "10%",
+                            marginBottom: 10,
+                          }}
+                          defaultValue={new Date()}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          onChange={(e) => setDate(e.target.value)}
+                        />
+
+                        {/* 
+                        <TextField
+                          id="standard-select-currency"
+                          select
+                          label="Unidade"
+                          value={unidade}
+                          onChange={handleChange}
+                          style={{
+                            width: "45%",
+                           
+                            marginBottom: 10,
+                          }}
+                        >
+                          {unidades.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                              {option.label}
+                            </MenuItem>
+                          ))}
+                        </TextField> */}
+                      </div>
+                      <div style={{ marginRight: "12%", marginLeft: "12%" }}>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          className={classes.button}
+                          startIcon={<CancelIcon />}
+                          onClick={handleClose}
+                        >
+                          Cancelar
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          className={classes.button}
+                          endIcon={<SaveIcon />}
+                          onClick={savePlantacao}
+                        >
+                          Salvar
+                        </Button>
+                      </div>
+                    </form>
+                  </div>
+                </Fade>
+              </Modal>
+
+              {/* Modal Bug */}
+              {/* <Modal
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                className={classes.modal}
+                open={openBug}
+                onClose={handleCloseBug}
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                  timeout: 500,
+                }}
+              >
+                <Fade in={openBug}>
+                  <div className={classes.paper}>
+                    <h2
+                      style={{
+                        fontSize: 30,
+                        fontFamily: "monospace",
+                        textAlign: "center",
+                        backgroundColor: constantes.colors.insumos,
+                        color: "#fff",
+                        borderRadius: 10,
+                      }}
+                      id="transition-modal-title"
+                    >
+                      Nova Praga
                     </h2>
 
                     <form
@@ -353,7 +417,7 @@ export default function Insumos() {
 
                         <TextField
                           id="date"
-                          label="Data da Compra"
+                          label="Data da Plantação"
                           type="date"
                           style={{
                             width: "45%",
@@ -367,17 +431,10 @@ export default function Insumos() {
                           onChange={(e) => setDataCompraInsumo(e.target.value)}
                         />
 
-                        <TextField
-                          id="date"
-                          label="Data de Validade"
-                          type="date"
-                          style={{ width: "45%", marginBottom: 10 }}
-                          defaultValue={new Date()}
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                          onChange={(e) => setValidadeInsumo(e.target.value)}
-                        />
+
+
+
+
                         <TextField
                           id="standard-select-currency"
                           select
@@ -386,7 +443,7 @@ export default function Insumos() {
                           onChange={handleChange}
                           style={{
                             width: "45%",
-                            marginRight: 32,
+                           
                             marginBottom: 10,
                           }}
                         >
@@ -397,23 +454,7 @@ export default function Insumos() {
                           ))}
                         </TextField>
 
-                        <TextField
-                          id="standard-basic"
-                          label="Quantidade"
-                          style={{ width: "40%", marginBottom: 10 }}
-                          onChange={(e) => setEstoqueInsumo(e.target.value)}
-                        />
-
-                        <TextField
-                          id="standard-basic"
-                          label="Valor"
-                          style={{
-                            width: "40%",
-                            marginRight: "10%",
-                            marginBottom: 10,
-                          }}
-                          onChange={(e) => setValueInsumo(e.target.value)}
-                        />
+                     
                       </div>
                       <div style={{ marginRight: "12%", marginLeft: "12%" }}>
                         <Button
@@ -421,7 +462,7 @@ export default function Insumos() {
                           color="secondary"
                           className={classes.button}
                           startIcon={<CancelIcon />}
-                          onClick={handleClose}
+                          onClick={handleCloseBug}
                         >
                           Cancelar
                         </Button>
@@ -439,13 +480,13 @@ export default function Insumos() {
                   </div>
                 </Fade>
               </Modal>
-
+ */}
               <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
                 className={classes.modal}
                 open={openEdit}
-                onClose={handleClose}
+                onClose={handleCloseEdit}
                 closeAfterTransition
                 BackdropComponent={Backdrop}
                 BackdropProps={{
@@ -465,7 +506,7 @@ export default function Insumos() {
                       }}
                       id="transition-modal-title"
                     >
-                      Editar Insumo
+                      Editar Plantação
                     </h2>
 
                     <form
@@ -478,13 +519,13 @@ export default function Insumos() {
                           id="standard-basic"
                           label="Descrição"
                           style={{ width: "100%", marginBottom: 10 }}
-                          onChange={(e) => setDescInsumosEdit(e.target.value)}
-                          value={descInsumosEdit}
+                          onChange={(e) => setDescPlantacaoEdit(e.target.value)}
+                          value={descPlantacaoEdit}
                         />
 
                         <TextField
                           id="date"
-                          label="Data da Compra"
+                          label="Data da Plantação"
                           type="date"
                           style={{
                             width: "45%",
@@ -495,26 +536,11 @@ export default function Insumos() {
                           InputLabelProps={{
                             shrink: true,
                           }}
-                          onChange={(e) =>
-                            setDataCompraInsumoEdit(e.target.value)
-                          }
-                          value={dataCompraInsumoEdit}
+                          onChange={(e) => setDateEdit(e.target.value)}
+                          value={dateEdit}
                         />
 
-                        <TextField
-                          id="date"
-                          label="Data de Validade"
-                          type="date"
-                          style={{ width: "45%", marginBottom: 10 }}
-                          defaultValue={new Date()}
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                          onChange={(e) =>
-                            setValidadeInsumoEdit(e.target.value)
-                          }
-                          value={validadeInsumoEdit}
-                        />
+                        {/* 
                         <TextField
                           id="standard-select-currency"
                           select
@@ -523,7 +549,7 @@ export default function Insumos() {
                           onChange={handleChange}
                           style={{
                             width: "45%",
-                            marginRight: 32,
+                           
                             marginBottom: 10,
                           }}
                         >
@@ -533,26 +559,7 @@ export default function Insumos() {
                             </MenuItem>
                           ))}
                         </TextField>
-
-                        <TextField
-                          id="standard-basic"
-                          label="Quantidade"
-                          style={{ width: "40%", marginBottom: 10 }}
-                          onChange={(e) => setEstoqueInsumoEdit(e.target.value)}
-                          value={estoqueInsumoEdit}
-                        />
-
-                        <TextField
-                          id="standard-basic"
-                          label="Valor"
-                          style={{
-                            width: "40%",
-                            marginRight: "10%",
-                            marginBottom: 10,
-                          }}
-                          onChange={(e) => setValueInsumoEdit(e.target.value)}
-                          value={valueInsumoEdit}
-                        />
+ */}
                       </div>
                       <div style={{ marginRight: "12%", marginLeft: "12%" }}>
                         <Button
@@ -569,7 +576,7 @@ export default function Insumos() {
                           color="primary"
                           className={classes.button}
                           endIcon={<SaveIcon />}
-                          onClick={EditarInsumo}
+                          onClick={EditarPlantacao}
                         >
                           Salvar
                         </Button>
@@ -588,12 +595,10 @@ export default function Insumos() {
                   <TableHead>
                     <TableRow>
                       <TableCell align="center">Descrição</TableCell>
-                      <TableCell align="center">Data da Compra</TableCell>
+                      <TableCell align="center">Data</TableCell>
 
-                      <TableCell align="center">Validade</TableCell>
-                      <TableCell align="center">Em Estoque</TableCell>
-                      <TableCell align="center">Valor Unitário</TableCell>
-                      <TableCell align="center">Unidade</TableCell>
+                      <TableCell align="center">Pragas Encontradas</TableCell>
+
                       <TableCell align="center">Opções</TableCell>
                     </TableRow>
                   </TableHead>
@@ -605,25 +610,25 @@ export default function Insumos() {
                         </TableCell>
 
                         <TableCell align="center">
-                          {moment(new Date(row.purchase))
+                          {moment(new Date(row.date))
                             .locale("pt-br")
                             .format("ddd, D [de] MMMM [de] YYYY")}
                         </TableCell>
 
-                        <TableCell align="center">
-                          {moment(new Date(row.validity))
-                            .locale("pt-br")
-                            .format("DD/MM/YYYY")}
-                        </TableCell>
                         <TableCell align="center" component="th" scope="row">
-                          {row.stock}
-                        </TableCell>
-                        <TableCell align="center">{row.value}</TableCell>
-                        <TableCell align="center" component="th" scope="row">
-                          {row.unit}
+                          {row.pests}
                         </TableCell>
 
                         <TableCell align="center">
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            style={{ margin: "5px" }}
+                            onClick={() => {}}
+                          >
+                            <BugReportIcon />
+                          </Button>
+
                           <Button
                             variant="contained"
                             color="primary"
@@ -682,7 +687,7 @@ export default function Insumos() {
               variant="contained"
               color="primary"
               style={{ margin: "5px" }}
-              onClick={() => deleteInsumos(idDel, refreshPage)}
+              onClick={() => deletePlantacao(idDel, refreshPage)}
             >
               SIM
             </Button>
