@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext } from "react";
 
-import api, { TOKEN_KEY, ADMIN, ID } from "../api";
+import api, { TOKEN_KEY, ADMIN, ID, CITY } from "../api";
 
 const AuthContext = createContext({});
 
@@ -33,6 +33,7 @@ const AuthProvider = ({ children }) => {
         setAuthenticated(true);
 
         localStorage.setItem(ID, response.data.id_usuario);
+        localStorage.setItem(CITY, response.data.city);
 
         if (response.data.admin === 1) {
           setAdmin(true);

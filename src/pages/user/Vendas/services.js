@@ -23,7 +23,6 @@ export async function postVenda(
   refreshPage
 ) {
 
- 
   await api
     .post(
       `/sales`,
@@ -42,16 +41,53 @@ export async function postVenda(
       }
     )
     .then(() => {
-      refreshPage(200, "venda");
+      refreshPage(200, "adicionado");
     });
 }
+
+export async function EditVenda(
+  desc,
+  date,
+  comprador,
+  qtd,
+  valor,
+  unidade,
+  id,
+  refreshPage
+) {
+
+  await api
+    .patch(
+      `/sales`,
+      {
+        user: localStorage.getItem(ID),
+        description: desc,
+        date: date,
+        buyer: comprador,
+        quantity: qtd,
+        value: valor,
+        unit: unidade,
+        frequency: "Recorrente",
+        id: id
+      },
+      {
+        headers: { Authorization: `token ${token}` },
+      }
+    )
+    .then(() => {
+      refreshPage(200, "editado");
+    });
+}
+
+
+
 
 
 export async function deleteVenda(id, refreshPage){
   await api.delete(`sales/${id}`,{
     headers: { Authorization: `token ${token}` },
   }).then(()=>{
-    refreshPage(200, "delete");
+    refreshPage(200, "deletado");
   })
 
 }

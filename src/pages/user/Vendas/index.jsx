@@ -5,7 +5,7 @@ import TableCard from "components/TableCard";
 import "date-fns";
 
 import React, { useEffect, useState } from "react";
-import { getVendas, postVenda, deleteVenda } from "./services";
+import { getVendas, postVenda, EditVenda, deleteVenda } from "./services";
 import constantes from "constantes";
 
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -107,17 +107,22 @@ const unidades = [
     value: "UND",
     label: "UND",
   },
+  {
+    value: "SACO",
+    label: "SACO",
+  },
 ];
 
 export default function Vendas() {
   const [list, setList] = useState([]);
+
   const totalVendas = list.length;
 
   const valorT = [];
 
   const valorTotal = () => {
     let valor = 0;
-    for (let i = 0; i < list.length; i++) {
+    for (let i = list.length - 1; i >= 0; i--) {
       valor = list[i].value * list[i].quantity;
       valorT.push(valor);
     }
@@ -130,7 +135,6 @@ export default function Vendas() {
   valorTotal();
 
   const ganhoTotal = valorT.reduce((total, numero) => total + numero, 0);
-
   useEffect(() => {
     getVendas()
       .then((result) => {
@@ -140,11 +144,14 @@ export default function Vendas() {
   }, []);
 
   function refreshPage(status, request) {
-    if (status === 200 && request === "venda") {
-      alert("Venda inserida");
+    if (status === 200 && request === "adicionado") {
+      alert("Venda Inserida");
       document.location.reload();
-    } else if (status === 200 && request === "delete") {
+    } else if (status === 200 && request === "deletado") {
       alert("Venda Excluída");
+      document.location.reload();
+    } else if (status === 200 && request === "editado") {
+      alert("Venda Editada");
       document.location.reload();
     }
   }
@@ -226,54 +233,77 @@ export default function Vendas() {
         setUniEdit(list[cont].unit);
         setQtdEdit(list[cont].quantity);
         setValorEdit(list[cont].value);
-        setcompradorEdit(list[cont].buyer);
+        setCompradorEdit(list[cont].buyer);
+        setIdEdit(list[cont].id);
       }
     }
 
     handleOpenEdit();
   }
 
+  function EditarVenda() {
+    EditVenda(
+      descEdit,
+      new Date(dataEdit),
+      compradorEdit,
+      qtdEdit,
+      valorEdit,
+      uniEdit,
+      idEdit,
+      refreshPage
+    );
+  }
+
   const [descEdit, setDescEdit] = useState("");
-  const [dataEdit, setDataEdit] = useState();
+  const [dataEdit, setDataEdit] = useState("");
   const [uniEdit, setUniEdit] = useState("");
   const [qtdEdit, setQtdEdit] = useState("");
   const [valorEdit, setValorEdit] = useState("");
-  const [compradorEdit, setcompradorEdit] = useState("");
+  const [compradorEdit, setCompradorEdit] = useState("");
+  const [idEdit, setIdEdit] = useState("");
 
   const classes = useStyles();
 
   return (
     <>
-      <div className={classes.date}></div>
+      <div
+        style={{
+          display: "flex",
+          flex: 1,
+          flexWrap: "wrap",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+          paddingLeft: "5%",
+          paddingRight: "5%",
+          marginTop: "3%",
+        }}
+      >
+        <div style={{ flex: 1 }}>
+          <StatusCard
+            color="pink"
+            icon="trending_up"
+            title="Vendas Realizadas"
+            amount={`${totalVendas}`}
+          //  percentage="3.48 %"
+           // percentageIcon="arrow_upward"
+           // percentageColor="green"
+            //date="Mês Passado"
+          />
+        </div>
 
-      <div className="bg-white-500 pt-14 pb-28 px-3 md:px-8 h-auto">
-        <div className="container mx-auto max-w-full">
-          <div
-            style={{ marginTop: "3%" }}
-            className="grid grid-cols-2 lg:grid-cols-2 xl:grid-cols-3"
-          >
-            <StatusCard
-              color="pink"
-              icon="trending_up"
-              title="Vendas Realizadas"
-              amount={`${totalVendas}`}
-              percentage="3.48 %"
-              percentageIcon="arrow_upward"
-              percentageColor="green"
-              date="Mês Passado"
-            />
-            <StatusCard
-              color="purple"
-              icon="paid"
-              title="Ganho Total"
-              // eslint-disable-next-line no-useless-concat
-              amount={"R$ " + `${ganhoTotal}`}
-              percentage="3.48"
-              percentageIcon="arrow_downward"
-              percentageColor="red"
-              date="Since last week"
-            />
-          </div>
+        <div style={{ flex: 1 }}>
+          <StatusCard
+            color="purple"
+            icon="paid"
+            title="Ganho Total"
+            // eslint-disable-next-line no-useless-concat
+            amount={"R$ " + `${ganhoTotal}`}
+            //percentage="3.48"
+            //percentageIcon="arrow_downward"
+            //percentageColor="red"
+            //date="Since last week"
+          />
         </div>
       </div>
 
@@ -456,7 +486,7 @@ export default function Vendas() {
                           id="standard-basic"
                           label="Descrição"
                           style={{ width: "100%", marginBottom: 10 }}
-                          // onChange={(e) => setDescVenda(e.target.value)}
+                          onChange={(e) => setDescEdit(e.target.value)}
                           InputLabelProps={{
                             shrink: true,
                           }}
@@ -472,7 +502,7 @@ export default function Vendas() {
                           InputLabelProps={{
                             shrink: true,
                           }}
-                          //onChange={(e) => setDataVenda(e.target.value)}
+                          onChange={(e) => setDataEdit(e.target.value)}
                           value={dataEdit}
                         />
 
@@ -499,7 +529,7 @@ export default function Vendas() {
                           id="standard-basic"
                           label="Quantidade"
                           style={{ width: "45%", marginBottom: 10 }}
-                          //onChange={(e) => setQtdVenda(e.target.value)}
+                          onChange={(e) => setQtdEdit(e.target.value)}
                           InputLabelProps={{
                             shrink: true,
                           }}
@@ -510,7 +540,7 @@ export default function Vendas() {
                           id="standard-basic"
                           label="Valor Unidade"
                           style={{ width: "100%", marginBottom: 10 }}
-                          // onChange={(e) => setValorVenda(e.target.value)}
+                          onChange={(e) => setValorEdit(e.target.value)}
                           InputLabelProps={{
                             shrink: true,
                           }}
@@ -521,7 +551,7 @@ export default function Vendas() {
                           id="standard-basic"
                           label="Comprador"
                           style={{ width: "100%", marginBottom: 10 }}
-                          onChange={(e) => setComprador(e.target.value)}
+                          onChange={(e) => setCompradorEdit(e.target.value)}
                           InputLabelProps={{
                             shrink: true,
                           }}
@@ -544,7 +574,7 @@ export default function Vendas() {
                           color="primary"
                           className={classes.button}
                           endIcon={<SaveIcon />}
-                          onClick={saveVenda}
+                          onClick={EditarVenda}
                         >
                           Salvar
                         </Button>
@@ -562,7 +592,6 @@ export default function Vendas() {
                 >
                   <TableHead>
                     <TableRow>
-                      <TableCell align="center">ID</TableCell>
                       <TableCell align="center">Descrição</TableCell>
                       <TableCell align="center">Data</TableCell>
                       <TableCell align="center">Comprador</TableCell>
@@ -574,45 +603,45 @@ export default function Vendas() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {list.map((row, i) => (
-                      <TableRow key={row.id}>
-                        <TableCell align="center" component="th" scope="row">
-                          {row.id}
-                        </TableCell>
-                        <TableCell align="center" component="th" scope="row">
-                          {row.description}
-                        </TableCell>
-                        <TableCell align="center">
-                          {moment(new Date(row.date))
-                            .locale("pt-br")
-                            .format(`ddd, DD [de] MMMM [de] YYYY`)}
-                        </TableCell>
-                        <TableCell align="center">{row.buyer}</TableCell>
-                        <TableCell align="center">{row.quantity}</TableCell>
-                        <TableCell align="center">{row.value}</TableCell>
-                        <TableCell align="center">{row.unit}</TableCell>
-                        <TableCell align="center">{getTotal(i)}</TableCell>
+                    {list
+                      .slice(0)
+                      .reverse()
+                      .map((row, i) => (
+                        <TableRow key={row.id}>
+                          <TableCell align="center" component="th" scope="row">
+                            {row.description}
+                          </TableCell>
+                          <TableCell align="center">
+                            {moment(new Date(row.date))
+                              .locale("pt-br")
+                              .format(`ddd, DD [de] MMMM [de] YYYY`)}
+                          </TableCell>
+                          <TableCell align="center">{row.buyer}</TableCell>
+                          <TableCell align="center">{row.quantity}</TableCell>
+                          <TableCell align="center">{row.value}</TableCell>
+                          <TableCell align="center">{row.unit}</TableCell>
+                          <TableCell align="center">{getTotal(i)}</TableCell>
 
-                        <TableCell align="center">
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            style={{ margin: "5px" }}
-                            onClick={() => ConfirmEdit(row.id)}
-                          >
-                            <CreateIcon />
-                          </Button>
-                          <Button
-                            style={{ margin: "5px" }}
-                            variant="contained"
-                            color="secondary"
-                            onClick={() => ConfirmDelete(row.id)}
-                          >
-                            <DeleteIcon />
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                          <TableCell align="center">
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              style={{ margin: "5px" }}
+                              onClick={() => ConfirmEdit(row.id)}
+                            >
+                              <CreateIcon />
+                            </Button>
+                            <Button
+                              style={{ margin: "5px" }}
+                              variant="contained"
+                              color="secondary"
+                              onClick={() => ConfirmDelete(row.id)}
+                            >
+                              <DeleteIcon />
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
                   </TableBody>
                 </Table>
               </TableContainer>

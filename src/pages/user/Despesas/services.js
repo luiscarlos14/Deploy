@@ -38,6 +38,34 @@ export async function postDespesa(
     });
 }
 
+export async function EditDespesa(
+  desc,
+  date,
+  valor,
+  status,
+  id,
+  refreshPage
+) {
+  await api
+    .patch(
+      `/expenditures`,
+      {
+        description: desc,
+        date: date,
+        value: valor,
+        pay: status,
+        frequency: "Recorrente",
+        id: id
+      },
+      {
+        headers: { Authorization: `token ${token}` },
+      }
+    )
+    .then(() => {
+      refreshPage(200, "edit");
+    });
+}
+
 
 export async function deleteDespesa(id, refreshPage){
   await api.delete(`expenditures/${id}`,{

@@ -3,6 +3,7 @@ export default {
     colors: {
         primary: '#287C43',
         despesas: '#e32636',
-        insumos: 'purple'
+        insumos: 'purple',
+        funcionarios: 'blue'
     }
 }

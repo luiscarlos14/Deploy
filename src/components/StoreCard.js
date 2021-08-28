@@ -8,8 +8,8 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 
 import clsx from "clsx";
-import prod from "../assets/img/map.jpg";
-import loja from "../assets/img/loja.png";
+//import prod from "../assets/img/map.jpg";
+//import loja from "../assets/img/loja.png";
 import Collapse from "@material-ui/core/Collapse";
 
 import IconButton from "@material-ui/core/IconButton";
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 345,
     minWidth: 300,
     margin: "2%",
-    flex: 1
+    flex: 1,
   },
 
   media: {
@@ -49,7 +49,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const MediaCard = (props) => {
-  
   const classes = useStyles();
 
   const [expanded, setExpanded] = React.useState(false);
@@ -63,20 +62,26 @@ const MediaCard = (props) => {
       <CardActionArea>
         <CardMedia
           className={classes.media}
-          image={prod}
+          image={
+            "https://images.tcdn.com.br/img/img_prod/696987/fosfato_monoamonico_map_dripsol_sqm_sc_25kg_263_1_20191116163351.jpg"
+          }
           title="Contemplative Reptile"
         />
+
+        {/* <Image source={{uri: "https://images.tcdn.com.br/img/img_prod/696987/fosfato_monoamonico_map_dripsol_sqm_sc_25kg_263_1_20191116163351.jpg"}} />
+         */}
+
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
-            {props.title}
+            {props.name}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
-            {props.describe}
+            {props.category}
           </Typography>
         </CardContent>
       </CardActionArea>
       <CardActions disableSpacing>
-        <div>Contato: </div>
+        <div>Detalhes: </div>
 
         <IconButton
           className={clsx(classes.expand, {
@@ -91,19 +96,27 @@ const MediaCard = (props) => {
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <Typography paragraph><b>E-mail:</b> exemplo@gmail.com</Typography>
-          <Typography paragraph><b>Telefone:</b> (87)88988776655</Typography>
-          <Typography paragraph>Vendido por:</Typography>
+          <Typography paragraph>
+            <b>Valor:</b> R$ {props.value}
+          </Typography>
+          <Typography paragraph>
+            <b>Unidade:</b> {props.unit}
+          </Typography>
+          <Typography paragraph>
+            <b>Detalhes:</b> {props.describe}
+          </Typography>
+
           <CardMedia
             className={classes.submedia}
-            image={loja}
+            image={
+              "https://1757140519.rsc.cdn77.org/blog/wp-content/uploads/sites/6/2020/09/h_farm_11.png"
+            }
             title="Logomarca da Loja"
           />
         </CardContent>
       </Collapse>
     </Card>
   );
-}
-
+};
 
 export default MediaCard;

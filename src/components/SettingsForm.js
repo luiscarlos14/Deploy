@@ -1,13 +1,13 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import Card from "@material-tailwind/react/Card";
 import CardHeader from "@material-tailwind/react/CardHeader";
 import CardBody from "@material-tailwind/react/CardBody";
 import Button from "@material-tailwind/react/Button";
 import TextField from "@material-ui/core/TextField";
+import { EditInfoPersonal, EditInfoAddress } from "./Services";
 import api, { TOKEN_KEY, ID } from "../api";
 
-
-async function getUser(){
+async function getUser() {
   const token = sessionStorage.getItem(TOKEN_KEY);
   const id = localStorage.getItem(ID);
 
@@ -19,17 +19,15 @@ async function getUser(){
   return res;
 }
 
-
-
 export default function SettingsForm() {
-  const [name, setName] = useState('');
-  const [surname, setSurname] = useState('');
-  const [cpf, setCPF] = useState('');
-  const [street, setStreet] = useState('');
-  const [neighborhood, setNeighborhood] = useState('');
-  const [city, setCity] = useState('');
-  const [cep, setCep] = useState('');
-  const [email, setEmail] = useState('');
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
+  const [cpf, setCPF] = useState("");
+  const [street, setStreet] = useState("");
+  const [neighborhood, setNeighborhood] = useState("");
+  const [city, setCity] = useState("");
+  const [cep, setCep] = useState("");
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
     getUser()
@@ -37,11 +35,11 @@ export default function SettingsForm() {
         setName(result[0].name);
         setSurname(result[0].surname);
         setCPF(result[0].cpf);
-        setStreet(result[0].street)
-        setNeighborhood(result[0].neighborhood)
-        setCity(result[0].city)
-        setCep(result[0].cep)
-        setEmail(result[0].email)
+        setStreet(result[0].street);
+        setNeighborhood(result[0].neighborhood);
+        setCity(result[0].city);
+        setCep(result[0].cep);
+        setEmail(result[0].email);
       })
       .catch();
   }, []);
@@ -68,7 +66,7 @@ export default function SettingsForm() {
           </h6>
           <div className="flex flex-wrap mt-10">
             <div className="w-full lg:w-6/12 pr-4 mb-10 font-light">
-            <TextField
+              <TextField
                 id="nome"
                 label="Nome"
                 type="text"
@@ -77,13 +75,12 @@ export default function SettingsForm() {
                   shrink: true,
                 }}
                 value={name}
-                onChange={(e)=> setName(e.target.value)}
-                
+                onChange={(e) => setName(e.target.value)}
               />
             </div>
 
             <div className="w-full lg:w-6/12 pr-4 mb-10 font-light">
-            <TextField
+              <TextField
                 id="sobrenome"
                 label="Sobrenome"
                 type="text"
@@ -92,11 +89,11 @@ export default function SettingsForm() {
                   shrink: true,
                 }}
                 value={surname}
-                onChange={(e)=> setSurname(e.target.value)}
+                onChange={(e) => setSurname(e.target.value)}
               />
             </div>
             <div className="w-full lg:w-6/12 pr-4 mb-10 font-light">
-            <TextField
+              <TextField
                 id="cpf"
                 label="CPF"
                 type="cpf"
@@ -106,24 +103,26 @@ export default function SettingsForm() {
                 }}
                 value={cpf}
                 helperText="O CPF não pode ser modificado!"
-
               />
             </div>
           </div>
-          <div style= {{marginTop: '1px'}} >
-                  
-                        <Button color="green" buttonType="default" ripple="dark"  onClick={() => EditInfoPersonal(cpf, name, surname)}>
-                            Confirmar Alterações
-                        </Button>
-                 
-                </div>
+          <div style={{ marginTop: "1px" }}>
+            <Button
+              color="green"
+              buttonType="default"
+              ripple="dark"
+              onClick={() => EditInfoPersonal(cpf, name, surname, refreshPage)}
+            >
+              Confirmar Alterações
+            </Button>
+          </div>
 
           <h6 className="text-green-500 text-sm my-6 font-light uppercase">
             Endereço
           </h6>
           <div className="flex flex-wrap mt-10">
             <div className="w-full lg:w-12/12 mb-10 font-light">
-            <TextField
+              <TextField
                 id="endereco"
                 label="Endereço"
                 type="text"
@@ -132,11 +131,11 @@ export default function SettingsForm() {
                   shrink: true,
                 }}
                 value={street}
-                onChange={(e)=> setStreet(e.target.value)}
+                onChange={(e) => setStreet(e.target.value)}
               />
             </div>
             <div className="w-full lg:w-4/12 pr-4 mb-10 font-light">
-            <TextField
+              <TextField
                 id="cidade"
                 label="Cidade"
                 type="text"
@@ -145,11 +144,11 @@ export default function SettingsForm() {
                   shrink: true,
                 }}
                 value={city}
-                onChange={(e)=> setCity(e.target.value)}
-              />            
+                onChange={(e) => setCity(e.target.value)}
+              />
             </div>
             <div className="w-full lg:w-4/12 px-4 mb-10 font-light">
-            <TextField
+              <TextField
                 id="estado"
                 label="Estado"
                 type="text"
@@ -158,11 +157,11 @@ export default function SettingsForm() {
                   shrink: true,
                 }}
                 value={neighborhood}
-                onChange={(e)=> setNeighborhood(e.target.value)}
-              /> 
+                onChange={(e) => setNeighborhood(e.target.value)}
+              />
             </div>
             <div className="w-full lg:w-4/12 pl-4 mb-10 font-light">
-            <TextField
+              <TextField
                 id="cep"
                 label="Cep"
                 type="text"
@@ -171,17 +170,20 @@ export default function SettingsForm() {
                   shrink: true,
                 }}
                 value={cep}
-                onChange={(e)=> setCep(e.target.value)}
-              /> 
+                onChange={(e) => setCep(e.target.value)}
+              />
             </div>
           </div>
-          <div style= {{marginTop: '1px'}}>
-                   
-                        <Button color="green" buttonType="default" ripple="dark" onClick={() => EditInfoAddress(street, neighborhood, city, cep)}>
-                            Confirmar Alterações
-                        </Button>
-             
-                </div>
+          <div style={{ marginTop: "1px" }}>
+            <Button
+              color="green"
+              buttonType="default"
+              ripple="dark"
+              onClick={() => EditInfoAddress(street, neighborhood, city, cep)}
+            >
+              Confirmar Alterações
+            </Button>
+          </div>
 
           <h6 className="text-green-500 text-sm my-6 font-light uppercase">
             Informações de Acesso
@@ -197,8 +199,7 @@ export default function SettingsForm() {
                   shrink: true,
                 }}
                 value={email}
-                onChange={(e)=> setEmail(e.target.value)}
-                
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
 
@@ -222,13 +223,11 @@ export default function SettingsForm() {
           </div>
         </form>
 
-        <div style= {{marginTop: '1px'}} >
-                    
-                        <Button color="green" buttonType="default" ripple="dark">
-                            Confirmar Alterações
-                        </Button>
-               
-                </div>
+        <div style={{ marginTop: "1px" }}>
+          <Button color="green" buttonType="default" ripple="dark">
+            Confirmar Alterações
+          </Button>
+        </div>
       </CardBody>
     </Card>
   );
@@ -242,60 +241,4 @@ function refreshPage(status, request) {
     alert("Endereço atualizado");
     document.location.reload();
   }
-}
-
-
-const token = sessionStorage.getItem(TOKEN_KEY);
-const id = localStorage.getItem(ID)
-
-async function EditInfoPersonal(
-  cpf,
-  name,
-  surname,
-) {
-  await api
-    .put(
-      `/users/personal`,
-      {
-        cpf: cpf,
-        name: name,
-        surname: surname,
-        id: id,
-      },
-      {
-        headers: { Authorization: `token ${token}` },
-      }
-    )
-    .then(() => {
-      refreshPage(200, "personal");
-    }).catch((error) => {
-      console.log(error)
-    })
-}
-
-async function EditInfoAddress(
-  street,
-  neighborhood,
-  city,
-  cep, 
-) {
-  await api
-    .patch(
-      `/users/address`,
-      {
-        street: street,
-        neighborhood: neighborhood,
-        city: city,
-        cep: cep,
-        id: id,
-      },
-      {
-        headers: { Authorization: `token ${token}` },
-      }
-    )
-    .then(() => {
-      alert("Informações Pessoas Atualizadas!");
-    }).catch((error) => {
-      console.log(error)
-    })
 }

@@ -8,10 +8,10 @@ import CreateIcon from "@material-ui/icons/Create";
 import Button from "@material-ui/core/Button";
 
 import {
-  getDespesas,
-  postDespesa,
-  EditDespesa,
-  deleteDespesa,
+  getInsumos,
+  postInsumos,
+  editInsumos,
+  deleteInsumos,
 } from "./services";
 
 import React, { useEffect, useState } from "react";
@@ -37,17 +37,6 @@ import SaveIcon from "@material-ui/icons/Save";
 
 import moment from "moment";
 import "moment/locale/pt-br";
-
-const status = [
-  {
-    value: 1,
-    label: "PAGA",
-  },
-  {
-    value: 0,
-    label: "PENDENTE",
-  },
-];
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
@@ -100,21 +89,33 @@ const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
   },
-  alerta: {
-    width: "100%",
-    "& > * + *": {
-      marginTop: theme.spacing(2),
-    },
-  },
 }));
 
-export default function Despesas() {
+const unidades = [
+  {
+    value: "KG",
+    label: "KG",
+  },
+  {
+    value: "CAIXA",
+    label: "CX",
+  },
+  {
+    value: "UND",
+    label: "UND",
+  },
+  {
+    value: "SACO",
+    label: "SACO",
+  },
+];
+
+export default function Insumos() {
   const [list, setList] = useState([]);
 
-  const totalDespesas = list.length;
+  const totalInsumos = list.length;
 
   const valorT = [];
-  const pendentes = [];
 
   const valorTotal = () => {
     let valor = 0;
@@ -126,59 +127,48 @@ export default function Despesas() {
 
   valorTotal();
 
-  const totalPendente = () => {
-    let cont = 0;
-
-    for (let i = 0; i < list.length; i++) {
-      if (list[i].pay === 0) {
-        cont = cont + 1;
-      }
-    }
-    pendentes.push(cont);
-  };
-
-  totalPendente();
-
-  const despesaTotal = valorT.reduce((total, numero) => total + numero, 0);
+  const valorEstoque = valorT.reduce((total, numero) => total + numero, 0);
 
   useEffect(() => {
-    getDespesas()
+    getInsumos()
       .then((result) => {
         setList(result);
       })
       .catch();
   }, []);
 
+  console.log(list);
+
   function refreshPage(status, request) {
-    if (status === 200 && request === "despesa") {
-      alert("Despesa inserida");
+    if (status === 200 && request === "adicionado") {
+      alert("Insumo Inserida");
       document.location.reload();
-    } else if (status === 200 && request === "delete") {
-      alert("Despesa Excluída");
+    } else if (status === 200 && request === "deletado") {
+      alert("Insumo Excluída");
       document.location.reload();
-    } else if (status === 200 && request === "edit") {
-      alert("Despesa Editada");
+    } else if (status === 200 && request === "editado") {
+      alert("Insumo Editada");
       document.location.reload();
     }
   }
 
-  const [descDespesa, setDescDespesa] = useState("");
-  const [dataDespesa, setDataDespesa] = useState("");
-  const [statusDespesa, setStatusDespesa] = useState(0);
-  const [valorDespesa, setValorDespesa] = useState("");
+  const [descInsumos, setDescInsumos] = useState("");
+  const [unidade, setUnidade] = useState("KG");
+  const [dataCompraInsumo, setDataCompraInsumo] = useState("");
+  const [validadeInsumo, setValidadeInsumo] = useState("");
+  const [estoqueInsumo, setEstoqueInsumo] = useState("");
+  const [valueInsumo, setValueInsumo] = useState("");
 
-  function saveDespesa() {
-    if (descDespesa === "" || dataDespesa === "" || valorDespesa === "") {
-      alert("Preencha todos os campos!");
-    } else {
-      postDespesa(
-        descDespesa,
-        new Date(dataDespesa),
-        valorDespesa,
-        statusDespesa,
-        refreshPage
-      );
-    }
+  function saveInsumo() {
+    postInsumos(
+      estoqueInsumo,
+      valueInsumo,
+      descInsumos,
+      dataCompraInsumo,
+      validadeInsumo,
+      unidade,
+      refreshPage
+    );
   }
 
   const [open, setOpen] = React.useState(false);
@@ -194,7 +184,6 @@ export default function Despesas() {
   const handleClose = () => {
     setOpen(false);
   };
-
   const handleOpenEdit = () => {
     setOpenEdit(true);
   };
@@ -212,7 +201,7 @@ export default function Despesas() {
   };
 
   const handleChange = (event) => {
-    setStatusDespesa(event.target.value);
+    setUnidade(event.target.value);
   };
 
   function ConfirmDelete(i) {
@@ -223,31 +212,37 @@ export default function Despesas() {
   function ConfirmEdit(i) {
     for (let cont = 0; cont < list.length; cont++) {
       if (list[cont].id === i) {
-        setDescDespesaEdit(list[cont].description);
-        setDataDespesaEdit(list[cont].date);
-        setValorDespesaEdit(list[cont].value);
-        setIdDespesaEdit(list[cont].id);
+        setDescInsumosEdit(list[cont].description);
+        setDataCompraInsumoEdit(list[cont].purchase);
+        setValidadeInsumoEdit(list[cont].validity);
+        setEstoqueInsumoEdit(list[cont].stock);
+        setValueInsumoEdit(list[cont].value);
+        setIdEdit(list[cont].id);
       }
     }
 
     handleOpenEdit();
   }
 
-  function editDespesa() {
-    EditDespesa(
-      descDespesaEdit,
-      dataDespesaEdit,
-      valorDespesaEdit,
-      statusDespesa,
-      idDespesaEdit,
+  function EditarInsumo() {
+    editInsumos(
+      estoqueInsumoEdit,
+      valueInsumoEdit,
+      descInsumosEdit,
+      new Date(dataCompraInsumoEdit),
+      new Date(validadeInsumoEdit),
+      unidade,
+      idEdit,
       refreshPage
     );
   }
 
-  const [descDespesaEdit, setDescDespesaEdit] = useState("");
-  const [dataDespesaEdit, setDataDespesaEdit] = useState("");
-  const [valorDespesaEdit, setValorDespesaEdit] = useState("");
-  const [idDespesaEdit, setIdDespesaEdit] = useState("");
+  const [descInsumosEdit, setDescInsumosEdit] = useState("");
+  const [dataCompraInsumoEdit, setDataCompraInsumoEdit] = useState("");
+  const [validadeInsumoEdit, setValidadeInsumoEdit] = useState("");
+  const [estoqueInsumoEdit, setEstoqueInsumoEdit] = useState("");
+  const [valueInsumoEdit, setValueInsumoEdit] = useState("");
+  const [idEdit, setIdEdit] = useState("");
 
   const classes = useStyles();
 
@@ -268,41 +263,30 @@ export default function Despesas() {
       >
         <div style={{ flex: 1 }}>
           <StatusCard
-            color="blue"
+            color="pink"
             icon="trending_up"
-            title="Total de Despesas"
-            amount={`${totalDespesas}`}
-            // percentage="3.48 %"
-            // percentageIcon="arrow_upward"
+            title="Total de Insumos"
+            amount={`${totalInsumos}`}
+           // percentage="3.48 %"
+           // percentageIcon="arrow_upward"
             //percentageColor="green"
-            //date="Mês Passado"
+           /// date="Mês Passado"
           />
         </div>
         <div style={{ flex: 1 }}>
           <StatusCard
             color="purple"
             icon="paid"
-            title="Despesa Total"
+            title="Valor em Estoque"
             // eslint-disable-next-line no-useless-concat
-            amount={"R$ " + `${despesaTotal}`}
-            //percentage="3.48"
-            //  percentageIcon="arrow_downward"
-            //  percentageColor="red"
-            // date="Since last week"
+            amount={"R$ " + `${valorEstoque}`}
+          ///  percentage="3.48"
+          ///  percentageIcon="arrow_downward"
+           //// percentageColor="red"
+           /// date="Since last week"
           />
         </div>
-        <div style={{ flex: 1 }}>
-          <StatusCard
-            color="pink"
-            icon="money_off"
-            title="Pendentes"
-            amount={pendentes}
-            //  percentage="12"
-            //  percentageIcon="arrow_upward"
-            //  percentageColor="green"
-            // date="Since last month"
-          />
-        </div>
+      
       </div>
 
       <div className="px-3 md:px-8 h-auto -mt-24">
@@ -311,9 +295,9 @@ export default function Despesas() {
             style={{ marginTop: "10%" }}
             className="grid grid-cols-1 px-4 mb-16"
           >
-            <TableCard title="Despesas" color={constantes.colors.despesas}>
+            <TableCard title="Insumos" color={constantes.colors.insumos}>
               <ButtonT
-                color={"red"}
+                color={"purple"}
                 buttonType="filled"
                 size="regular"
                 style={{ marginBottom: 20 }}
@@ -323,7 +307,7 @@ export default function Despesas() {
                 ripple="light"
                 onClick={handleOpen}
               >
-                Adicionar Despesa
+                Adicionar Insumo
               </ButtonT>
 
               <Modal
@@ -345,13 +329,13 @@ export default function Despesas() {
                         fontSize: 30,
                         fontFamily: "monospace",
                         textAlign: "center",
-                        backgroundColor: constantes.colors.despesas,
+                        backgroundColor: constantes.colors.insumos,
                         color: "#fff",
                         borderRadius: 10,
                       }}
                       id="transition-modal-title"
                     >
-                      Nova Despesa
+                      Novo Insumo
                     </h2>
 
                     <form
@@ -364,19 +348,60 @@ export default function Despesas() {
                           id="standard-basic"
                           label="Descrição"
                           style={{ width: "100%", marginBottom: 10 }}
-                          onChange={(e) => setDescDespesa(e.target.value)}
+                          onChange={(e) => setDescInsumos(e.target.value)}
                         />
 
                         <TextField
                           id="date"
-                          label="Data"
+                          label="Data da Compra"
                           type="date"
-                          style={{ width: "100%", marginBottom: 10 }}
+                          style={{
+                            width: "45%",
+                            marginRight: "10%",
+                            marginBottom: 10,
+                          }}
                           defaultValue={new Date()}
                           InputLabelProps={{
                             shrink: true,
                           }}
-                          onChange={(e) => setDataDespesa(e.target.value)}
+                          onChange={(e) => setDataCompraInsumo(e.target.value)}
+                        />
+
+                        <TextField
+                          id="date"
+                          label="Data de Validade"
+                          type="date"
+                          style={{ width: "45%", marginBottom: 10 }}
+                          defaultValue={new Date()}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          onChange={(e) => setValidadeInsumo(e.target.value)}
+                        />
+                        <TextField
+                          id="standard-select-currency"
+                          select
+                          label="Unidade"
+                          value={unidade}
+                          onChange={handleChange}
+                          style={{
+                            width: "45%",
+                            marginRight: 32,
+                            marginBottom: 10,
+                          }}
+                        >
+                          {unidades.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                              {option.label}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+
+                        <TextField
+                          id="standard-basic"
+                          label="Quantidade"
+                          style={{ width: "40%", marginBottom: 10 }}
+                          onChange={(e) => setEstoqueInsumo(e.target.value)}
                         />
 
                         <TextField
@@ -387,27 +412,8 @@ export default function Despesas() {
                             marginRight: "10%",
                             marginBottom: 10,
                           }}
-                          onChange={(e) => setValorDespesa(e.target.value)}
+                          onChange={(e) => setValueInsumo(e.target.value)}
                         />
-
-                        <TextField
-                          id="standard-select-currency"
-                          select
-                          label="Status"
-                          value={statusDespesa}
-                          onChange={handleChange}
-                          style={{
-                            width: "40%",
-                            marginRight: 32,
-                            marginBottom: 10,
-                          }}
-                        >
-                          {status.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                              {option.label}
-                            </MenuItem>
-                          ))}
-                        </TextField>
                       </div>
                       <div style={{ marginRight: "12%", marginLeft: "12%" }}>
                         <Button
@@ -424,7 +430,7 @@ export default function Despesas() {
                           color="primary"
                           className={classes.button}
                           endIcon={<SaveIcon />}
-                          onClick={saveDespesa}
+                          onClick={saveInsumo}
                         >
                           Salvar
                         </Button>
@@ -453,13 +459,13 @@ export default function Despesas() {
                         fontSize: 30,
                         fontFamily: "monospace",
                         textAlign: "center",
-                        backgroundColor: constantes.colors.despesas,
+                        backgroundColor: constantes.colors.insumos,
                         color: "#fff",
                         borderRadius: 10,
                       }}
                       id="transition-modal-title"
                     >
-                      Editar Despesa
+                      Editar Insumo
                     </h2>
 
                     <form
@@ -472,21 +478,68 @@ export default function Despesas() {
                           id="standard-basic"
                           label="Descrição"
                           style={{ width: "100%", marginBottom: 10 }}
-                          onChange={(e) => setDescDespesaEdit(e.target.value)}
-                          value={descDespesaEdit}
+                          onChange={(e) => setDescInsumosEdit(e.target.value)}
+                          value={descInsumosEdit}
                         />
 
                         <TextField
                           id="date"
-                          label="Data"
+                          label="Data da Compra"
                           type="date"
-                          style={{ width: "100%", marginBottom: 10 }}
+                          style={{
+                            width: "45%",
+                            marginRight: "10%",
+                            marginBottom: 10,
+                          }}
                           defaultValue={new Date()}
                           InputLabelProps={{
                             shrink: true,
                           }}
-                          onChange={(e) => setDataDespesaEdit(e.target.value)}
-                          value={dataDespesaEdit}
+                          onChange={(e) =>
+                            setDataCompraInsumoEdit(e.target.value)
+                          }
+                          value={dataCompraInsumoEdit}
+                        />
+
+                        <TextField
+                          id="date"
+                          label="Data de Validade"
+                          type="date"
+                          style={{ width: "45%", marginBottom: 10 }}
+                          defaultValue={new Date()}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          onChange={(e) =>
+                            setValidadeInsumoEdit(e.target.value)
+                          }
+                          value={validadeInsumoEdit}
+                        />
+                        <TextField
+                          id="standard-select-currency"
+                          select
+                          label="Unidade"
+                          value={unidade}
+                          onChange={handleChange}
+                          style={{
+                            width: "45%",
+                            marginRight: 32,
+                            marginBottom: 10,
+                          }}
+                        >
+                          {unidades.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                              {option.label}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+
+                        <TextField
+                          id="standard-basic"
+                          label="Quantidade"
+                          style={{ width: "40%", marginBottom: 10 }}
+                          onChange={(e) => setEstoqueInsumoEdit(e.target.value)}
+                          value={estoqueInsumoEdit}
                         />
 
                         <TextField
@@ -497,28 +550,9 @@ export default function Despesas() {
                             marginRight: "10%",
                             marginBottom: 10,
                           }}
-                          onChange={(e) => setValorDespesaEdit(e.target.value)}
-                          value={valorDespesaEdit}
+                          onChange={(e) => setValueInsumoEdit(e.target.value)}
+                          value={valueInsumoEdit}
                         />
-
-                        <TextField
-                          id="standard-select-currency"
-                          select
-                          label="Status"
-                          value={statusDespesa}
-                          onChange={handleChange}
-                          style={{
-                            width: "40%",
-                            marginRight: 32,
-                            marginBottom: 10,
-                          }}
-                        >
-                          {status.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                              {option.label}
-                            </MenuItem>
-                          ))}
-                        </TextField>
                       </div>
                       <div style={{ marginRight: "12%", marginLeft: "12%" }}>
                         <Button
@@ -535,7 +569,7 @@ export default function Despesas() {
                           color="primary"
                           className={classes.button}
                           endIcon={<SaveIcon />}
-                          onClick={editDespesa}
+                          onClick={EditarInsumo}
                         >
                           Salvar
                         </Button>
@@ -554,9 +588,12 @@ export default function Despesas() {
                   <TableHead>
                     <TableRow>
                       <TableCell align="center">Descrição</TableCell>
-                      <TableCell align="center">Data</TableCell>
-                      <TableCell align="center">Valor</TableCell>
-                      <TableCell align="center">Status</TableCell>
+                      <TableCell align="center">Data da Compra</TableCell>
+
+                      <TableCell align="center">Validade</TableCell>
+                      <TableCell align="center">Em Estoque</TableCell>
+                      <TableCell align="center">Valor Unitário</TableCell>
+                      <TableCell align="center">Unidade</TableCell>
                       <TableCell align="center">Opções</TableCell>
                     </TableRow>
                   </TableHead>
@@ -568,14 +605,22 @@ export default function Despesas() {
                         </TableCell>
 
                         <TableCell align="center">
-                          {moment(new Date(row.date))
+                          {moment(new Date(row.purchase))
                             .locale("pt-br")
                             .format("ddd, D [de] MMMM [de] YYYY")}
                         </TableCell>
-                        <TableCell align="center">{row.value}</TableCell>
 
                         <TableCell align="center">
-                          {row.pay === 1 ? "Paga" : "Pendente"}
+                          {moment(new Date(row.validity))
+                            .locale("pt-br")
+                            .format("DD/MM/YYYY")}
+                        </TableCell>
+                        <TableCell align="center" component="th" scope="row">
+                          {row.stock}
+                        </TableCell>
+                        <TableCell align="center">{row.value}</TableCell>
+                        <TableCell align="center" component="th" scope="row">
+                          {row.unit}
                         </TableCell>
 
                         <TableCell align="center">
@@ -605,7 +650,6 @@ export default function Despesas() {
           </div>
         </div>
       </div>
-
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -638,7 +682,7 @@ export default function Despesas() {
               variant="contained"
               color="primary"
               style={{ margin: "5px" }}
-              onClick={() => deleteDespesa(idDel, refreshPage)}
+              onClick={() => deleteInsumos(idDel, refreshPage)}
             >
               SIM
             </Button>
