@@ -253,7 +253,7 @@ export default function Plantacoes() {
       <div className="px-3 md:px-8 h-auto -mt-24">
         <div className="container mx-auto max-w-full">
           <div
-            style={{ marginTop: "10%" }}
+            style={{ marginTop: "15%" }}
             className="grid grid-cols-1 px-4 mb-16"
           >
             <TableCard title="Plantações" color={constantes.colors.insumos}>

@@ -2,12 +2,14 @@ import StatusCard from "components/StatusCard";
 import TableCard from "components/TableCard";
 
 import React, { useEffect, useState } from "react";
-import { getUsers } from "./services";
+import { getUsers, postUser, EditUser, deleteUser } from "./services";
 import constantes from "constantes";
 
 import DeleteIcon from "@material-ui/icons/Delete";
 import CreateIcon from "@material-ui/icons/Create";
 import Button from "@material-ui/core/Button";
+import LockIcon from '@material-ui/icons/Lock';
+import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 
 import ButtonT from "@material-tailwind/react/Button";
 import { makeStyles } from "@material-ui/core/styles";
@@ -24,11 +26,25 @@ import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 
 import TextField from "@material-ui/core/TextField";
-import MenuItem from '@material-ui/core/MenuItem';
+import MenuItem from "@material-ui/core/MenuItem";
 
-import CancelIcon from '@material-ui/icons/Cancel';
-import SaveIcon from '@material-ui/icons/Save';
+import CancelIcon from "@material-ui/icons/Cancel";
+import SaveIcon from "@material-ui/icons/Save";
 
+function rand() {
+  return Math.round(Math.random() * 20) - 10;
+}
+
+function getModalStyle() {
+  const top = 50 + rand();
+  const left = 50 + rand();
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -44,78 +60,72 @@ const useStyles = makeStyles((theme) => ({
     border: "2px solid #287C43",
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+  },
+  paperTwo: {
+    position: "absolute",
+    width: 400,
+    backgroundColor: theme.palette.background.paper,
+    border: "2px solid #000",
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
   },
   root: {
     "& > *": {
       margin: theme.spacing(1),
       width: "40ch",
-      
     },
   },
   button: {
     margin: theme.spacing(1),
   },
- 
 }));
 
-const unidades = [
+const tipo = [
   {
-    value: 'KG',
-    label: 'KG',
+    value: 0,
+    label: "Padrão",
   },
   {
-    value: 'CAIXA',
-    label: 'CX',
-  },
-  {
-    value: 'UND',
-    label: 'UND',
+    value: 1,
+    label: "Administrador",
   },
 ];
 
-export default function Vendas() {
-  const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
+const atividade = [
+  {
+    value: 0,
+    label: "Desativado",
+  },
+  {
+    value: 1,
+    label: "Ativo",
+  },
+];
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const [unidade, setUnidade] = React.useState('KG');
-
-  const handleChange = (event) => {
-    setUnidade(event.target.value);
-  };
-
-
+export default function Users() {
   const [list, setList] = useState([]);
 
-   const totalUsers = list.length;
-/*
-  const valorT = [];
+  const totalUsers = list.length;
+
+  
 
   const valorTotal = () => {
-    let valor = 0;
+    let ativos = 0;
     for (let i = 0; i < list.length; i++) {
-      valor = list[i].valor * list[i].quantidade;
-      valorT.push(valor);
+      if(list[i].active === '1'){
+        ativos = ativos +1;
+      }
     }
+    return ativos
   };
 
-  function getTotal(i) {
-    return valorT[i];
-  }
+
 
   valorTotal();
 
-  const ganhoTotal = valorT.reduce((total, numero) => total + numero, 0); */
 
   useEffect(() => {
     getUsers()
@@ -125,10 +135,210 @@ export default function Vendas() {
       .catch();
   }, []);
 
+  function refreshPage(status, request) {
+    if (status === 200 && request === "adicionado") {
+      alert("Usuário Inserido");
+      document.location.reload();
+    } else if (status === 200 && request === "deletado") {
+      alert("Usuário Excluído");
+      document.location.reload();
+    } else if (status === 200 && request === "editado") {
+      alert("Usuário Editado");
+      document.location.reload();
+    }
+  }
+
+  const [admin, setAdmin] = useState(0);
+  const [cpf, setCpf] = useState("");
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [active, setActive] = useState(1);
+  const [street, setStreet] = useState("");
+  const [neighborhood, setNeighborhood] = useState("");
+  const [city, setCity] = useState("");
+  const [cep, setCep] = useState("");
+  const [profile, setProfile] = useState(null);
+
+  function saveUsuario() {
+    if (
+      cpf === "" ||
+      name === "" ||
+      surname === "" ||
+      email === "" ||
+      street === "" ||
+      neighborhood === "" ||
+      city === "" ||
+      cep === ""
+    ) {
+      alert("Preencha todos os campos obrigatórios!");
+    } else if (password !== confirmPassword) {
+      alert("Senhas diferentes!");
+    } else {
+      postUser(
+        admin,
+        cpf,
+        name,
+        surname,
+        email,
+        password,
+        active,
+        street,
+        neighborhood,
+        city,
+        cep,
+        profile,
+        refreshPage
+      );
+    }
+  }
+
+  const [open, setOpen] = React.useState(false);
+  const [openEdit, setOpenEdit] = React.useState(false);
+  const [modalStyle] = React.useState(getModalStyle);
+  const [openDel, setOpenDel] = React.useState(false);
+  const [idDel, setIdDel] = useState();
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpenEdit = () => {
+    setOpenEdit(true);
+  };
+
+  const handleCloseEdit = () => {
+    setOpenEdit(false);
+  };
+
+  const handleOpenDel = () => {
+    setOpenDel(true);
+  };
+
+  const handleCloseDel = () => {
+    setOpenDel(false);
+  };
+
+  const handleChange = (event) => {
+    setAdmin(event.target.value);
+  };
+
+  const handleChangeEdit = (event) => {
+    setAdminEdit(event.target.value);
+  };
+
+  const handleChangeEditSituacao = (event) => {
+    setActiveEdit(event.target.value);
+  };
+
+  function ConfirmDelete(i) {
+    setIdDel(i);
+    handleOpenDel();
+  }
+
+  function ConfirmEdit(i) {
+    for (let cont = 0; cont < list.length; cont++) {
+      if (list[cont].id === i) {
+        setAdminEdit(list[cont].admin);
+        setCpfEdit(list[cont].cpf);
+        setNameEdit(list[cont].name);
+        setSurnameEdit(list[cont].surname);
+        setEmailEdit(list[cont].email);
+        setActiveEdit(list[cont].active);
+        setStreetEdit(list[cont].street);
+        setNeighborhoodEdit(list[cont].neighborhood);
+        setCityEdit(list[cont].city);
+        setCepEdit(list[cont].cep);
+        setIdEdit(list[cont].id);
+      }
+    }
+
+    handleOpenEdit();
+  }
+
+  function EditarUsuario() {
+    EditUser(
+      adminEdit,
+      cpfEdit,
+      nameEdit,
+      surnameEdit,
+      emailEdit,
+      activeEdit,
+      streetEdit,
+      neighborhoodEdit,
+      cityEdit,
+      cepEdit,
+      idEdit,
+      refreshPage
+    );
+  }
+
+  const [adminEdit, setAdminEdit] = useState(0);
+  const [cpfEdit, setCpfEdit] = useState("");
+  const [nameEdit, setNameEdit] = useState("");
+  const [surnameEdit, setSurnameEdit] = useState("");
+  const [emailEdit, setEmailEdit] = useState("");
+  const [activeEdit, setActiveEdit] = useState(1);
+  const [streetEdit, setStreetEdit] = useState("");
+  const [neighborhoodEdit, setNeighborhoodEdit] = useState("");
+  const [cityEdit, setCityEdit] = useState("");
+  const [cepEdit, setCepEdit] = useState("");
+  const [idEdit, setIdEdit] = useState("");
+
+  const [passwordEdit, setPasswordEdit] = useState("");
+  const [confirmPasswordEdit, setConfirmPasswordEdit] = useState("");
+
+  const classes = useStyles();
+
   return (
     <>
-       
-      <div style={{marginTop:'3%'}} className="px-3 md:px-8 h-auto -mt-24">
+      <div
+        style={{
+          display: "flex",
+          flex: 1,
+          flexWrap: "wrap",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+          paddingLeft: "5%",
+          paddingRight: "5%",
+          marginTop: "3%",
+        }}
+      >
+        <div style={{ flex: 1 }}>
+          <StatusCard
+            color="pink"
+            icon="trending_up"
+            title="Total de Usuários"
+            amount={`${totalUsers}`}
+            //  percentage="3.48 %"
+            // percentageIcon="arrow_upward"
+            // percentageColor="green"
+            //date="Mês Passado"
+          />
+        </div>
+
+        <div style={{ flex: 1 }}>
+          <StatusCard
+            color="purple"
+            icon="paid"
+            title="Usuários Ativos"
+            amount={valorTotal()}
+            //percentage="3.48"
+            //percentageIcon="arrow_downward"
+            //percentageColor="red"
+            //date="Since last week"
+          />
+        </div>
+      </div>
+
+      <div style={{ marginTop: "3%" }} className="px-3 md:px-8 h-auto -mt-24">
         <div className="container mx-auto max-w-full">
           <div className="grid grid-cols-1 px-4 mb-16">
             <TableCard title="Usuários" color={constantes.colors.primary}>
@@ -159,73 +369,144 @@ export default function Vendas() {
                 }}
               >
                 <Fade in={open}>
-
                   <div className={classes.paper}>
+                    <h2
+                      style={{
+                        fontSize: 30,
+                        fontFamily: "monospace",
+                        textAlign: "center",
+                        backgroundColor: "#287C43",
+                        color: "#fff",
+                        borderRadius: 10,
+                      }}
+                      id="transition-modal-title"
+                    >
+                      Novo Usuário
+                    </h2>
 
-                    <h2 style={{
-                      fontSize: 30,
-                      fontFamily: 'monospace',
-                      textAlign: 'center',
-                      backgroundColor:  '#287C43',
-                      color: '#fff',
-                      borderRadius: 10
-                    }} id="transition-modal-title">Nova Venda</h2>
-
-                    <form className={[classes.root]} noValidate autoComplete="off" >
-
-                      <div style={{padding: 10}}>
-
-                        <TextField 
-                          id="standard-basic" 
-                          label="Descrição"
-                          style={{width: '100%', marginBottom: 10}} 
-                          />
-
+                    <form
+                      className={[classes.root]}
+                      noValidate
+                      autoComplete="off"
+                    >
+                      <div style={{ padding: 10 }}>
                         <TextField
-                          id="date"
-                          label="Data"
-                          type="date"
-                          style={{width: '100%', marginBottom: 10,}}
-                          defaultValue= {new Date()}
+                          id="standard-basic"
+                          label="Foto de Perfil"
+                          type="file"
                           InputLabelProps={{
                             shrink: true,
                           }}
-                          />
-                                           
-                      <TextField
-                        id="standard-select-currency"
-                        select
-                        label="Unidade"
-                        value={unidade}
-                        onChange={handleChange}
-                        style={{width: '45%',marginRight: 32, marginBottom: 10}} 
-                      >
-                        {unidades.map((option) => (
-                          <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                          </MenuItem>
-                        ))}
-                      </TextField>
+                          style={{ width: "100%", marginBottom: 10 }}
+                          onChange={(e) => setProfile(e.target.files[0])}
+                        />
 
-                          <TextField 
-                          id="standard-basic" 
-                          label="Quantidade"
-                          style ={{width: '45%', marginBottom: 10}} />
+                        <TextField
+                          id="standard-basic"
+                          label="Nome"
+                          style={{
+                            width: "45%",
+                            marginRight: "10%",
+                            marginBottom: 10,
+                          }}
+                          onChange={(e) => setName(e.target.value)}
+                        />
+                        <TextField
+                          id="standard-basic"
+                          label="Sobrenome"
+                          style={{ width: "45%", marginBottom: 10 }}
+                          onChange={(e) => setSurname(e.target.value)}
+                        />
 
-                  
-                        <TextField 
-                          id="standard-basic" 
-                          label="Valor Total" 
-                          style={{width: '100%', marginBottom: 10}} />
+                        <TextField
+                          id="standard-basic"
+                          label="CPF"
+                          style={{
+                            width: "45%",
+                            marginRight: "10%",
+                            marginBottom: 10,
+                          }}
+                          onChange={(e) => setCpf(e.target.value)}
+                        />
 
-                          <TextField 
-                          id="standard-basic" 
-                          label="Comprador"
-                          style={{width: '100%', marginBottom: 10}} />
+                        <TextField
+                          id="standard-select-currency"
+                          select
+                          label="Tipo de Usuário"
+                          value={admin}
+                          onChange={handleChange}
+                          style={{
+                            width: "45%",
+                            marginBottom: 10,
+                          }}
+                        >
+                          {tipo.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                              {option.label}
+                            </MenuItem>
+                          ))}
+                        </TextField>
 
+                        <TextField
+                          id="standard-basic"
+                          label="Endereço"
+                          style={{ width: "100%", marginBottom: 10 }}
+                          onChange={(e) => setStreet(e.target.value)}
+                        />
+                        <TextField
+                          id="standard-basic"
+                          label="Cidade"
+                          style={{
+                            width: "45%",
+                            marginRight: "10%",
+                            marginBottom: 10,
+                          }}
+                          onChange={(e) => setCity(e.target.value)}
+                        />
+                        <TextField
+                          id="standard-basic"
+                          label="Estado"
+                          style={{ width: "45%", marginBottom: 10 }}
+                          onChange={(e) => setNeighborhood(e.target.value)}
+                        />
+                        <TextField
+                          id="standard-basic"
+                          label="CEP"
+                          style={{
+                            width: "35%",
+                            marginRight: "10%",
+                            marginBottom: 10,
+                          }}
+                          onChange={(e) => setCep(e.target.value)}
+                        />
 
+                        <TextField
+                          id="standard-basic"
+                          label="Email"
+                          style={{ width: "55%", marginBottom: 10 }}
+                          onChange={(e) => setEmail(e.target.value)}
+                        />
+
+                        <TextField
+                          id="standard-basic"
+                          label="Senha"
+                          type="password"
+                          style={{
+                            width: "45%",
+                            marginRight: "10%",
+                            marginBottom: 10,
+                          }}
+                          onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <TextField
+                          id="standard-basic"
+                          label="Confirmar Senha"
+                          type="password"
+                          style={{ width: "45%", marginBottom: 10 }}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
                       </div>
-                      <div style={{marginRight: '12%', marginLeft: '12%'}}>
+                      <div style={{ marginRight: "12%", marginLeft: "12%" }}>
                         <Button
                           variant="contained"
                           color="secondary"
@@ -240,16 +521,214 @@ export default function Vendas() {
                           color="primary"
                           className={classes.button}
                           endIcon={<SaveIcon />}
+                          onClick={saveUsuario}
                         >
                           Salvar
                         </Button>
                       </div>
-
                     </form>
                   </div>
                 </Fade>
               </Modal>
 
+              <Modal
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                className={classes.modal}
+                open={openEdit}
+                onClose={handleCloseEdit}
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                  timeout: 500,
+                }}
+              >
+                <Fade in={openEdit}>
+                  <div className={classes.paper}>
+                    <h2
+                      style={{
+                        fontSize: 30,
+                        fontFamily: "monospace",
+                        textAlign: "center",
+                        backgroundColor: "#287C43",
+                        color: "#fff",
+                        borderRadius: 10,
+                      }}
+                      id="transition-modal-title"
+                    >
+                      Editar Usuário
+                    </h2>
+
+                    <form
+                      className={[classes.root]}
+                      noValidate
+                      autoComplete="off"
+                    >
+                      <div style={{ padding: 10 }}>
+                        <TextField
+                          id="standard-basic"
+                          label="Nome"
+                          style={{
+                            width: "45%",
+                            marginRight: "10%",
+                            marginBottom: 10,
+                          }}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          onChange={(e) => setNameEdit(e.target.value)}
+                          value={nameEdit}
+                        />
+                        <TextField
+                          id="standard-basic"
+                          label="Sobrenome"
+                          style={{ width: "45%", marginBottom: 10 }}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          onChange={(e) => setSurnameEdit(e.target.value)}
+                          value={surnameEdit}
+                        />
+
+                        <TextField
+                          id="standard-basic"
+                          label="CPF"
+                          style={{
+                            width: "45%",
+                            marginRight: "10%",
+                            marginBottom: 10,
+                          }}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          onChange={(e) => setCpfEdit(e.target.value)}
+                          value={cpfEdit}
+                        />
+
+                        <TextField
+                          id="standard-select-currency"
+                          select
+                          label="Situação"
+                          value={activeEdit}
+                          onChange={handleChangeEditSituacao}
+                          style={{
+                            width: "45%",
+                            marginBottom: 10,
+                          }}
+                        >
+                          {atividade.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                              {option.label}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+
+                        <TextField
+                          id="standard-select-currency"
+                          select
+                          label="Tipo de Usuário"
+                          value={adminEdit}
+                          onChange={handleChangeEdit}
+                          style={{
+                            width: "35%",
+                            marginBottom: 10,
+                          }}
+                        >
+                          {tipo.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                              {option.label}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+
+                        <TextField
+                          id="standard-basic"
+                          label="Email"
+                          style={{
+                            width: "55%",
+                            marginLeft: "10%",
+                            marginBottom: 10,
+                          }}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          onChange={(e) => setEmailEdit(e.target.value)}
+                          value={emailEdit}
+                        />
+
+                        <TextField
+                          id="standard-basic"
+                          label="Endereço"
+                          style={{ width: "100%", marginBottom: 10 }}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          onChange={(e) => setStreetEdit(e.target.value)}
+                          value={streetEdit}
+                        />
+                        <TextField
+                          id="standard-basic"
+                          label="Cidade"
+                          style={{
+                            width: "45%",
+                            marginRight: "10%",
+                            marginBottom: 10,
+                          }}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          onChange={(e) => setCityEdit(e.target.value)}
+                          value={cityEdit}
+                        />
+                        <TextField
+                          id="standard-basic"
+                          label="Estado"
+                          style={{ width: "45%", marginBottom: 10 }}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          onChange={(e) => setNeighborhoodEdit(e.target.value)}
+                          value={neighborhoodEdit}
+                        />
+                        <TextField
+                          id="standard-basic"
+                          label="CEP"
+                          style={{
+                            width: "35%",
+                            marginRight: "10%",
+                            marginBottom: 10,
+                          }}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          onChange={(e) => setCepEdit(e.target.value)}
+                          value={cepEdit}
+                        />
+                      </div>
+                      <div style={{ marginRight: "12%", marginLeft: "12%" }}>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          className={classes.button}
+                          startIcon={<CancelIcon />}
+                          onClick={handleCloseEdit}
+                        >
+                          Cancelar
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          className={classes.button}
+                          endIcon={<SaveIcon />}
+                          onClick={EditarUsuario}
+                        >
+                          Salvar
+                        </Button>
+                      </div>
+                    </form>
+                  </div>
+                </Fade>
+              </Modal>
               <TableContainer component={Paper}>
                 <Table
                   className={classes.table}
@@ -269,24 +748,50 @@ export default function Vendas() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {list.map((row, i) => (
+                    {list.slice(0)
+                      .reverse().map((row, i) => (
                       <TableRow key={row.id}>
                         <TableCell align="center" component="th" scope="row">
                           {row.id}
                         </TableCell>
-                        <TableCell align="center">{row.admin === 0 ?  'Padrão' : 'Adm'}</TableCell>
+                        <TableCell align="center">
+                          {row.admin === 0 ? "Padrão" : "Adm"}
+                        </TableCell>
                         <TableCell align="center">{row.cpf}</TableCell>
-                        <TableCell align="center">{`${row.name}  ${row.surname === null ? '' : row.surname }`}</TableCell>
+                        <TableCell align="center">{`${row.name}  ${
+                          row.surname === null ? "" : row.surname
+                        }`}</TableCell>
                         <TableCell align="center">{row.email}</TableCell>
                         <TableCell align="center">{`${row.city}, ${row.neighborhood}`}</TableCell>
-                        <TableCell align="center">{row.ativa === 0 ? 'Desativada' : 'Ativa'}</TableCell>
-                        
+                        <TableCell align="center">
+                          {row.active === '0' ? "Desativada" : "Ativa"}
+                        </TableCell>
+                     
 
                         <TableCell align="center">
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            style={{ margin: "5px" }}
+                            onClick={() => ConfirmEdit(row.id)}
+                          >
+                            <PhotoCameraIcon />
+                            
+                          </Button>
                           <Button
                             variant="contained"
                             color="primary"
                             style={{ margin: "5px" }}
+                            onClick={() => ConfirmEdit(row.id)}
+                          >
+                            <LockIcon />
+                          </Button>
+                          
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            style={{ margin: "5px" }}
+                            onClick={() => ConfirmEdit(row.id)}
                           >
                             <CreateIcon />
                           </Button>
@@ -294,6 +799,7 @@ export default function Vendas() {
                             style={{ margin: "5px" }}
                             variant="contained"
                             color="secondary"
+                            onClick={() => ConfirmDelete(row.id)}
                           >
                             <DeleteIcon />
                           </Button>
@@ -307,6 +813,46 @@ export default function Vendas() {
           </div>
         </div>
       </div>
+
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={openDel}
+        onClose={handleCloseDel}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        {/* </Modal> <Modal open={openDel} onClose={handleCloseDel}> */}
+        <div style={modalStyle} className={classes.paperTwo}>
+          <center>
+            <h1 style={{ fontSize: 25, margin: 15 }}>
+              Deseja Realmente Excluir?
+            </h1>
+
+            <Button
+              style={{ margin: "5px" }}
+              variant="contained"
+              color="secondary"
+              onClick={handleCloseDel}
+            >
+              NÃO
+            </Button>
+
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ margin: "5px" }}
+              onClick={() => deleteUser(idDel, refreshPage)}
+            >
+              SIM
+            </Button>
+          </center>
+        </div>
+      </Modal>
     </>
   );
 }

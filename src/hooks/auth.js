@@ -32,7 +32,7 @@ const AuthProvider = ({ children }) => {
         sessionStorage.setItem(TOKEN_KEY, response.data.token);
         setAuthenticated(true);
 
-        localStorage.setItem(ID, response.data.id_usuario);
+        localStorage.setItem(ID, response.data.id_user);
         localStorage.setItem(CITY, response.data.city);
 
         if (response.data.admin === 1) {

@@ -2,7 +2,7 @@ import StatusCard from "components/StatusCard";
 import TableCard from "components/TableCard";
 
 import React, { useEffect, useState } from "react";
-import { getUsers } from "./services";
+import { deleteFornecedor, EditFornecedor, getFornecedores, postFornecedores } from "./services";
 import constantes from "constantes";
 
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -24,11 +24,26 @@ import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 
 import TextField from "@material-ui/core/TextField";
-import MenuItem from '@material-ui/core/MenuItem';
+import MenuItem from "@material-ui/core/MenuItem";
 
-import CancelIcon from '@material-ui/icons/Cancel';
-import SaveIcon from '@material-ui/icons/Save';
+import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
+import CancelIcon from "@material-ui/icons/Cancel";
+import SaveIcon from "@material-ui/icons/Save";
 
+function rand() {
+  return Math.round(Math.random() * 20) - 10;
+}
+
+function getModalStyle() {
+  const top = 50 + rand();
+  const left = 50 + rand();
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -44,24 +59,30 @@ const useStyles = makeStyles((theme) => ({
     border: "2px solid #287C43",
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+  },
+  paperTwo: {
+    position: "absolute",
+    width: 400,
+    backgroundColor: theme.palette.background.paper,
+    border: "2px solid #000",
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
   },
   root: {
     "& > *": {
       margin: theme.spacing(1),
       width: "40ch",
-      
     },
   },
   button: {
     margin: theme.spacing(1),
   },
- 
 }));
 
-const unidades = [
+/* const unidades = [
   {
     value: 'KG',
     label: 'KG',
@@ -74,31 +95,13 @@ const unidades = [
     value: 'UND',
     label: 'UND',
   },
-];
+]; */
 
-export default function Vendas() {
-  const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const [unidade, setUnidade] = React.useState('KG');
-
-  const handleChange = (event) => {
-    setUnidade(event.target.value);
-  };
-
-
+export default function Fornecedores() {
   const [list, setList] = useState([]);
 
-   const totalUsers = list.length;
-/*
+  const totalFornecedores = list.length;
+
   const valorT = [];
 
   const valorTotal = () => {
@@ -115,21 +118,203 @@ export default function Vendas() {
 
   valorTotal();
 
-  const ganhoTotal = valorT.reduce((total, numero) => total + numero, 0); */
+  const ganhoTotal = valorT.reduce((total, numero) => total + numero, 0);
 
   useEffect(() => {
-    getUsers()
+    getFornecedores()
       .then((result) => {
         setList(result);
       })
       .catch();
   }, []);
 
+  function refreshPage(status, request) {
+    if (status === 200 && request === "adicionado") {
+      alert("Fornecedor Inserido");
+      document.location.reload();
+    } else if (status === 200 && request === "deletado") {
+      alert("Fornecedor Excluído");
+      document.location.reload();
+    } else if (status === 200 && request === "editado") {
+      alert("Fornecedor Editado");
+      document.location.reload();
+    }
+  }
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("KG");
+  const [cnpj, setCnpj] = useState("");
+  const [description, setDescription] = useState("");
+  const [street, setStreet] = useState("");
+  const [neighborhood, setNeighborhood] = useState("");
+  const [city, setCity] = useState("KG");
+  const [cep, setCep] = useState("");
+  const [url, setUrl] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  function saveFornecedor() {
+    if (
+      name === "" ||
+      email === "" ||
+      phone === "" ||
+      cnpj === "" ||
+      description === "" ||
+      street === "" ||
+      neighborhood === "" ||
+      city === "" ||
+      cep === "" ||
+      url === "" 
+    ) {
+      alert("Preencha todos os campos!");
+    } else {
+      postFornecedores(
+        name,
+        email,
+        phone,
+        cnpj,
+        description,
+        street,
+        neighborhood,
+        city,
+        cep,
+        url,
+        selectedFile,
+        refreshPage
+      );
+    }
+  }
+
+  const [open, setOpen] = React.useState(false);
+  const [openEdit, setOpenEdit] = React.useState(false);
+  const [modalStyle] = React.useState(getModalStyle);
+  const [openDel, setOpenDel] = React.useState(false);
+  const [idDel, setIdDel] = useState();
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpenEdit = () => {
+    setOpenEdit(true);
+  };
+
+  const handleCloseEdit = () => {
+    setOpenEdit(false);
+  };
+
+  const handleOpenDel = () => {
+    setOpenDel(true);
+  };
+
+  const handleCloseDel = () => {
+    setOpenDel(false);
+  };
+
+  /*   const handleChange = (event) => {
+    setUnidade(event.target.value);
+  }; */
+
+  function ConfirmDelete(i) {
+    setIdDel(i);
+    handleOpenDel();
+  }
+  //const [unidade, setUnidade] = React.useState('KG');
+
+  /* const handleChange = (event) => {
+    setUnidade(event.target.value);
+  }; */
+
+  function ConfirmEdit(i) {
+    for (let cont = 0; cont < list.length; cont++) {
+
+      if (list[cont].id === i) {
+        setNameEdit(list[cont].name);
+        setEmailEdit(list[cont].email);
+        setPhoneEdit(list[cont].phone);
+        setCnpjEdit(list[cont].cnpj);
+        setDescriptionEdit(list[cont].description);
+        setStreetEdit(list[cont].street);
+        setNeighborhoodEdit(list[cont].neighborhood);
+        setCityEdit(list[cont].city);
+        setCepEdit(list[cont].cep);
+        setUrlEdit(list[cont].url);
+        setSelectedFileEdit(list[cont].logo)
+        setIdEdit(list[cont].id);
+
+      }
+    }
+
+    handleOpenEdit();
+  }
+
+  function EditarFornecedor() {
+    EditFornecedor(
+      nameEdit,
+      emailEdit,
+      phoneEdit,
+      cnpjEdit,
+      descriptionEdit,
+      streetEdit,
+      neighborhoodEdit,
+      cityEdit,
+      cepEdit,
+      urlEdit,
+      selectedFileEdit,
+      idEdit,
+      refreshPage
+    );
+  }
+
+  const [nameEdit, setNameEdit] = useState("");
+  const [emailEdit, setEmailEdit] = useState("");
+  const [phoneEdit, setPhoneEdit] = useState("");
+  const [cnpjEdit, setCnpjEdit] = useState("");
+  const [descriptionEdit, setDescriptionEdit] = useState("");
+  const [streetEdit, setStreetEdit] = useState("");
+  const [neighborhoodEdit, setNeighborhoodEdit] = useState("");
+  const [cityEdit, setCityEdit] = useState("");
+  const [cepEdit, setCepEdit] = useState("");
+  const [urlEdit, setUrlEdit] = useState("");
+  const [selectedFileEdit, setSelectedFileEdit] = useState("");
+  const [idEdit, setIdEdit] = useState("");
+
+  const classes = useStyles();
+
   return (
     <>
-   
+      <div
+        style={{
+          display: "flex",
+          flex: 1,
+          flexWrap: "wrap",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+          paddingLeft: "5%",
+          paddingRight: "5%",
+          marginTop: "3%",
+        }}
+      >
+        <div style={{ flex: 1 }}>
+          <StatusCard
+            color="pink"
+            icon="trending_up"
+            title="Fornecedores"
+            amount={`${totalFornecedores}`}
+            //  percentage="3.48 %"
+            // percentageIcon="arrow_upward"
+            // percentageColor="green"
+            //date="Mês Passado"
+          />
+        </div>
+      </div>
 
-      <div style={{marginTop:'3%'}} className="px-3 md:px-8 h-auto -mt-24">
+      <div style={{ marginTop: "3%" }} className="px-3 md:px-8 h-auto -mt-24">
         <div className="container mx-auto max-w-full">
           <div className="grid grid-cols-1 px-4 mb-16">
             <TableCard title="Fornecedores" color={constantes.colors.primary}>
@@ -144,7 +329,7 @@ export default function Vendas() {
                 ripple="light"
                 onClick={handleOpen}
               >
-                Novo Usuário
+                Novo Fornecedor
               </ButtonT>
 
               <Modal
@@ -160,40 +345,121 @@ export default function Vendas() {
                 }}
               >
                 <Fade in={open}>
-
                   <div className={classes.paper}>
+                    <h2
+                      style={{
+                        fontSize: 30,
+                        fontFamily: "monospace",
+                        textAlign: "center",
+                        backgroundColor: "#287C43",
+                        color: "#fff",
+                        borderRadius: 10,
+                      }}
+                      id="transition-modal-title"
+                    >
+                      Novo Fornecedor
+                    </h2>
 
-                    <h2 style={{
-                      fontSize: 30,
-                      fontFamily: 'monospace',
-                      textAlign: 'center',
-                      backgroundColor:  '#287C43',
-                      color: '#fff',
-                      borderRadius: 10
-                    }} id="transition-modal-title">Nova Venda</h2>
-
-                    <form className={[classes.root]} noValidate autoComplete="off" >
-
-                      <div style={{padding: 10}}>
-
-                        <TextField 
-                          id="standard-basic" 
-                          label="Descrição"
-                          style={{width: '100%', marginBottom: 10}} 
-                          />
-
-                        <TextField
-                          id="date"
-                          label="Data"
-                          type="date"
-                          style={{width: '100%', marginBottom: 10,}}
-                          defaultValue= {new Date()}
+                    <form
+                      className={[classes.root]}
+                      noValidate
+                      autoComplete="off"
+                    >
+                      <div style={{ padding: 10 }}>
+                      <TextField
+                          id="standard-basic"
+                          label="Logo"
+                          type='file'
                           InputLabelProps={{
                             shrink: true,
                           }}
-                          />
-                                           
-                      <TextField
+                          style={{ width: "100%", marginBottom: 10 }}
+                          onChange={(e) => setSelectedFile(e.target.files[0])}
+                        />
+
+                        <TextField
+                          id="standard-basic"
+                          label="Nome"
+                          style={{ width: "100%", marginBottom: 10 }}
+                          onChange={(e) => setName(e.target.value)}
+                        />
+
+                        <TextField
+                          id="standard-basic"
+                          label="Email"
+                          type="e-mail"
+                          style={{ width: "100%", marginBottom: 10 }}
+                          onChange={(e) => setEmail(e.target.value)}
+                        />
+
+                        <TextField
+                          id="standard-basic"
+                          label="Telefone"
+                          style={{
+                            width: "45%",
+                            marginRight: "10%",
+                            marginBottom: 10,
+                          }}
+                          onChange={(e) => setPhone(e.target.value)}
+                        />
+
+                        <TextField
+                          id="standard-basic"
+                          label="CNPJ"
+                          style={{ width: "45%", marginBottom: 10 }}
+                          onChange={(e) => setCnpj(e.target.value)}
+                        />
+
+                        <TextField
+                          id="standard-basic"
+                          label="Descrição"
+                          style={{ width: "100%", marginBottom: 10 }}
+                          onChange={(e) => setDescription(e.target.value)}
+                        />
+                        <TextField
+                          id="standard-basic"
+                          label="Endereço"
+                          style={{ width: "100%", marginBottom: 10 }}
+                          onChange={(e) => setStreet(e.target.value)}
+                        />
+
+                        <TextField
+                          id="standard-basic"
+                          label="Cidade"
+                          style={{
+                            width: "45%",
+                            marginRight: "10%",
+                            marginBottom: 10,
+                          }}
+                          onChange={(e) => setCity(e.target.value)}
+                        />
+
+                        <TextField
+                          id="standard-basic"
+                          label="Estado"
+                          style={{ width: "45%", marginBottom: 10 }}
+                          onChange={(e) => setNeighborhood(e.target.value)}
+                        />
+
+                        <TextField
+                          id="standard-basic"
+                          label="CEP"
+                          style={{
+                            width: "45%",
+                            marginRight: "10%",
+                            marginBottom: 10,
+                          }}
+                          onChange={(e) => setCep(e.target.value)}
+                        />
+
+                        <TextField
+                          id="standard-basic"
+                          label="Site"
+                          style={{ width: "45%", marginBottom: 10 }}
+                          onChange={(e) => setUrl(e.target.value)}
+                        />
+
+                        {/*       <TextField
                         id="standard-select-currency"
                         select
                         label="Unidade"
@@ -206,27 +472,9 @@ export default function Vendas() {
                             {option.label}
                           </MenuItem>
                         ))}
-                      </TextField>
-
-                          <TextField 
-                          id="standard-basic" 
-                          label="Quantidade"
-                          style ={{width: '45%', marginBottom: 10}} />
-
-                  
-                        <TextField 
-                          id="standard-basic" 
-                          label="Valor Total" 
-                          style={{width: '100%', marginBottom: 10}} />
-
-                          <TextField 
-                          id="standard-basic" 
-                          label="Comprador"
-                          style={{width: '100%', marginBottom: 10}} />
-
-
+                      </TextField> */}
                       </div>
-                      <div style={{marginRight: '12%', marginLeft: '12%'}}>
+                      <div style={{ marginRight: "12%", marginLeft: "12%" }}>
                         <Button
                           variant="contained"
                           color="secondary"
@@ -241,16 +489,224 @@ export default function Vendas() {
                           color="primary"
                           className={classes.button}
                           endIcon={<SaveIcon />}
+                          onClick={saveFornecedor}
                         >
                           Salvar
                         </Button>
                       </div>
-
                     </form>
                   </div>
                 </Fade>
               </Modal>
 
+              <Modal
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                className={classes.modal}
+                open={openEdit}
+                onClose={handleCloseEdit}
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                  timeout: 500,
+                }}
+              >
+                <Fade in={openEdit}>
+                  <div className={classes.paper}>
+                    <h2
+                      style={{
+                        fontSize: 30,
+                        fontFamily: "monospace",
+                        textAlign: "center",
+                        backgroundColor: "#287C43",
+                        color: "#fff",
+                        borderRadius: 10,
+                      }}
+                      id="transition-modal-title"
+                    >
+                      Editar Fornecedor
+                    </h2>
+
+                    <form
+                      className={[classes.root]}
+                      noValidate
+                      autoComplete="off"
+                    >
+                      <div style={{ padding: 10 }}>
+                        
+                      <TextField
+                          id="standard-basic"
+                          label="Logo"
+                          type='file'
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          style={{ width: "100%", marginBottom: 10 }}
+                          onChange={(e) => setSelectedFile(e.target.files[0])}
+                        
+                        />
+
+                        <TextField
+                          id="standard-basic"
+                          label="Nome"
+                          style={{ width: "100%", marginBottom: 10 }}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          onChange={(e) => setNameEdit(e.target.value)}
+                          value={nameEdit}
+                        />
+
+                        <TextField
+                          id="standard-basic"
+                          label="Email"
+                          type="e-mail"
+                          style={{ width: "100%", marginBottom: 10 }}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          onChange={(e) => setEmailEdit(e.target.value)}
+                          value={emailEdit}
+                        />
+
+                        <TextField
+                          id="standard-basic"
+                          label="Telefone"
+                          style={{
+                            width: "45%",
+                            marginRight: "10%",
+                            marginBottom: 10,
+                          }}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          onChange={(e) => setPhoneEdit(e.target.value)}
+                          value={phoneEdit}
+                        />
+
+                        <TextField
+                          id="standard-basic"
+                          label="CNPJ"
+                          style={{ width: "45%", marginBottom: 10 }}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          onChange={(e) => setCnpjEdit(e.target.value)}
+                          value={cnpjEdit}
+                        />
+
+                        <TextField
+                          id="standard-basic"
+                          label="Descrição"
+                          style={{ width: "100%", marginBottom: 10 }}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          onChange={(e) => setDescriptionEdit(e.target.value)}
+                          value={descriptionEdit}
+                        />
+                        <TextField
+                          id="standard-basic"
+                          label="Endereço"
+                          style={{ width: "100%", marginBottom: 10 }}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          onChange={(e) => setStreetEdit(e.target.value)}
+                          value={streetEdit}
+                        />
+
+                        <TextField
+                          id="standard-basic"
+                          label="Cidade"
+                          style={{
+                            width: "45%",
+                            marginRight: "10%",
+                            marginBottom: 10,
+                          }}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          onChange={(e) => setCityEdit(e.target.value)}
+                          value={cityEdit}
+                        />
+
+                        <TextField
+                          id="standard-basic"
+                          label="Estado"
+                          style={{ width: "45%", marginBottom: 10 }}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          onChange={(e) => setNeighborhoodEdit(e.target.value)}
+                          value={neighborhoodEdit}
+                        />
+
+                        <TextField
+                          id="standard-basic"
+                          label="CEP"
+                          style={{
+                            width: "45%",
+                            marginRight: "10%",
+                            marginBottom: 10,
+                          }}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          onChange={(e) => setCepEdit(e.target.value)}
+                          value={cepEdit}
+                        />
+
+                        <TextField
+                          id="standard-basic"
+                          label="Site"
+                          style={{ width: "45%", marginBottom: 10 }}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          onChange={(e) => setUrlEdit(e.target.value)}
+                          value={urlEdit}
+                        />
+
+                        {/*       <TextField
+                        id="standard-select-currency"
+                        select
+                        label="Unidade"
+                        value={unidade}
+                        onChange={handleChange}
+                        style={{width: '45%',marginRight: 32, marginBottom: 10}} 
+                      >
+                        {unidades.map((option) => (
+                          <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                          </MenuItem>
+                        ))}
+                      </TextField> */}
+                      </div>
+                      <div style={{ marginRight: "12%", marginLeft: "12%" }}>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          className={classes.button}
+                          startIcon={<CancelIcon />}
+                          onClick={handleCloseEdit}
+                        >
+                          Cancelar
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          className={classes.button}
+                          endIcon={<SaveIcon />}
+                          onClick={EditarFornecedor}
+                        >
+                          Salvar
+                        </Button>
+                      </div>
+                    </form>
+                  </div>
+                </Fade>
+              </Modal>
               <TableContainer component={Paper}>
                 <Table
                   className={classes.table}
@@ -281,13 +737,21 @@ export default function Vendas() {
                         <TableCell align="center">{row.email}</TableCell>
                         <TableCell align="center">{`${row.city}, ${row.neighborhood}`}</TableCell>
                         <TableCell align="center">{row.url}</TableCell>
-                        
 
                         <TableCell align="center">
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            style={{ margin: "5px" }}
+                            onClick={() => ConfirmEdit(row.id)}
+                          >
+                            <AddAPhotoIcon />
+                          </Button>
                           <Button
                             variant="contained"
                             color="primary"
                             style={{ margin: "5px" }}
+                            onClick={() => ConfirmEdit(row.id)}
                           >
                             <CreateIcon />
                           </Button>
@@ -295,6 +759,7 @@ export default function Vendas() {
                             style={{ margin: "5px" }}
                             variant="contained"
                             color="secondary"
+                            onClick={() => ConfirmDelete(row.id)}
                           >
                             <DeleteIcon />
                           </Button>
@@ -308,6 +773,47 @@ export default function Vendas() {
           </div>
         </div>
       </div>
+
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={openDel}
+        onClose={handleCloseDel}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        {/* </Modal> <Modal open={openDel} onClose={handleCloseDel}> */}
+        <div style={modalStyle} className={classes.paperTwo}>
+          <center>
+            <h1 style={{ fontSize: 25, margin: 15 }}>
+              Deseja Realmente Excluir?
+            </h1>
+
+            <Button
+              style={{ margin: "5px" }}
+              variant="contained"
+              color="secondary"
+              onClick={handleCloseDel}
+            >
+              NÃO
+            </Button>
+
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ margin: "5px" }}
+              onClick={() => deleteFornecedor(idDel, refreshPage)}
+            >
+              SIM
+            </Button>
+          </center>
+        </div>
+      </Modal>
+
     </>
   );
 }
