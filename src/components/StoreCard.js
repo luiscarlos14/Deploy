@@ -6,6 +6,8 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
+import { SERVER } from '../api';
+import Image from "@material-tailwind/react/Image";
 
 import clsx from "clsx";
 //import prod from "../assets/img/map.jpg";
@@ -15,6 +17,7 @@ import Collapse from "@material-ui/core/Collapse";
 import IconButton from "@material-ui/core/IconButton";
 import { red } from "@material-ui/core/colors";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,8 +52,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const MediaCard = (props) => {
-  const foto = props.photo === null ? "https://images.tcdn.com.br/img/img_prod/696987/fosfato_monoamonico_map_dripsol_sqm_sc_25kg_263_1_20191116163351.jpg" : props.photo
+
+const imagem =  `${SERVER}/${props.photo}`;
+
+const foto = props.photo === null ? "https://images.tcdn.com.br/img/img_prod/696987/fosfato_monoamonico_map_dripsol_sqm_sc_25kg_263_1_20191116163351.jpg" : imagem
   const classes = useStyles();
+  console.log(imagem)
 
   const [expanded, setExpanded] = React.useState(false);
 
@@ -58,18 +65,15 @@ const MediaCard = (props) => {
     setExpanded(!expanded);
   };
 
+  console.log(foto)
+
   return (
     <Card className={classes.root}>
       <CardActionArea>
-        <CardMedia
-          style={{width: '90%', height: '90%', justifyContent: 'center', alignItems:'center'}}
-          className={classes.media}
-          image={foto}
-          title="Imagem do Produto"
-        />
+       
 
-        {/* <Image source={{uri: "https://images.tcdn.com.br/img/img_prod/696987/fosfato_monoamonico_map_dripsol_sqm_sc_25kg_263_1_20191116163351.jpg"}} />
-         */}
+         <Image src={foto} />
+         
 
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">

@@ -1,12 +1,18 @@
-import api, { TOKEN_KEY, ID } from "../api";
+import api, { TOKEN_KEY, ID } from "../../../api";
 
 const token = sessionStorage.getItem(TOKEN_KEY);
 const id = localStorage.getItem(ID);
 
-console.log(id)
+export async function getUser() {
+  const res = (
+    await api.get(`/users/${id}`, {
+      headers: { Authorization: `token ${token}` },
+    })
+  ).data.response;
+  return res;
+}
 
 export async function EditInfoPersonal(cpf, name, surname, refreshPage) {
-  
   await api
     .patch(
       "/users/personal",
@@ -29,7 +35,13 @@ export async function EditInfoPersonal(cpf, name, surname, refreshPage) {
     });
 }
 
-export async function EditInfoAddress(street, neighborhood, city, cep, refreshPage) {
+export async function EditInfoAddress(
+  street,
+  neighborhood,
+  city,
+  cep,
+  refreshPage
+) {
   await api
     .patch(
       "/users/address",

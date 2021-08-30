@@ -1,17 +1,44 @@
+import React, {useState, useEffect} from 'react';
 import { useLocation } from 'react-router-dom';
 import Button from '@material-tailwind/react/Button';
 import Icon from '@material-tailwind/react/Icon';
 import NavbarInput from '@material-tailwind/react/NavbarInput';
 import Image from '@material-tailwind/react/Image';
 import Dropdown from '@material-tailwind/react/Dropdown';
-import ProfilePicture from 'assets/img/team-1-800x800.jpg';
+import ProfilePicture from '../assets/user.png';
 import { UseAuth } from '../hooks/auth';
+import api, { TOKEN_KEY, ID, SERVER } from "../api";
 
 import constante from '../constantes';
+
+const token = sessionStorage.getItem(TOKEN_KEY);
+const id = localStorage.getItem(ID);
+
+export async function getUser() {
+  const res = (
+    await api.get(`/users/${id}`, {
+      headers: { Authorization: `token ${token}` },
+    })
+  ).data.response;
+  return res;
+}
 
 export default function AdminNavbar({ showSidebar, setShowSidebar }) {
     const location = useLocation().pathname;
     const {logout} = UseAuth();
+
+    const [foto, setFoto] = useState("");
+
+    const Perfil = foto === null ? ProfilePicture : `${SERVER}/${foto}`
+
+    useEffect(() => {
+        getUser()
+          .then((result) => {
+            setFoto(result[0].profile);
+          })
+          .catch();
+      }, []);
+  
 
     return (
         <nav style={{backgroundColor: constante.colors.primary}} className="md:ml-64 py-6 px-3">
@@ -63,7 +90,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
                                 color="transparent"
                                 buttonText={
                                     <div className="w-12">
-                                        <Image src={"https://cdn.pixabay.com/photo/2015/03/04/22/35/head-659651_960_720.png"} rounded />
+                                        <Image src={Perfil} rounded />
                                     </div>
                                 }
                                 rounded

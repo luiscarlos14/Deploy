@@ -25,20 +25,20 @@ async function getUser(){
 
 export default function ProfileCard(props) {
 
-    const [name, setName] = useState('');
-    const [surname, setSurname] = useState('');
-    const [neighborhood, setNeighborhood] = useState('');
-    const [city, setCity] = useState('');
+    const [nameProfile, setNameProfile] = useState('');
+    const [surnameProfile, setSurnameProfile] = useState('');
+    const [neighborhoodProfile, setNeighborhoodProfile] = useState('');
+    const [cityProfile, setCityProfile] = useState('');
 
     const Perfil = props.photo === "" ? "https://cdn.pixabay.com/photo/2018/08/28/13/29/avatar-3637561_960_720.png" : props.photo
 
     useEffect(() => {
         getUser()
           .then((result) => {
-            setName(result[0].name);
-            setSurname(result[0].surname);
-            setNeighborhood(result[0].neighborhood)
-            setCity(result[0].city)
+            setNameProfile(result[0].name);
+            setSurnameProfile(result[0].surname);
+            setNeighborhoodProfile(result[0].neighborhood)
+            setCityProfile(result[0].city)
           })
           .catch();
       }, []);
@@ -64,10 +64,10 @@ export default function ProfileCard(props) {
                 </div>
 
             <div style={{marginTop: 10}} className="text-center">
-                <H5 color="gray">{`${name} ${surname}`}</H5>
+                <H5 color="gray">{`${nameProfile} ${surnameProfile}`}</H5>
                 <div className="mt-0 mb-2 text-gray-700 flex items-center justify-center gap-2">
                     <Icon name="place" size="xl" />
-                    {`${city}, ${neighborhood}`}
+                    {`${cityProfile}, ${neighborhoodProfile}`}
                 </div>
             </div>
            

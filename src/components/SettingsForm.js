@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+
 import Card from "@material-tailwind/react/Card";
 import CardHeader from "@material-tailwind/react/CardHeader";
 import CardBody from "@material-tailwind/react/CardBody";
@@ -20,6 +21,7 @@ async function getUser() {
 }
 
 export default function SettingsForm() {
+  
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [cpf, setCPF] = useState("");
