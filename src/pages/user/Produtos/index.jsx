@@ -5,8 +5,11 @@ import { getProdutos, getFornecedores } from "./services";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
 import api, { IDPRODUTO, CITY } from "../../../api";
+import Button from "@material-ui/core/Button";
+import SaveIcon from "@material-ui/icons/Save";
 
 import { makeStyles } from "@material-ui/core/styles";
+import { createImportTypeNode } from "typescript";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -18,19 +21,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
 export default function Produtos() {
   const classes = useStyles();
 
   const [produtos, setProdutos] = useState([]);
   const [fornecedores, setFornecedores] = useState([]);
 
-  const cidadeUser = localStorage.getItem(CITY)
-
+  const cidadeUser = localStorage.getItem(CITY);
 
   function refreshPage() {
-  
-      document.location.reload();
-    
+    document.location.reload();
   }
 
   useEffect(() => {
@@ -49,47 +50,83 @@ export default function Produtos() {
       .catch();
   }, []);
 
-  function getID(id){
-    for(let i = 0; i < fornecedores.length; i++){
-      if(fornecedores[i].id === id){
-        return fornecedores[i].city
+  function getName(id) {
+    for (let i = 0; i < fornecedores.length; i++) {
+      if (fornecedores[i].id === id) {
+        return fornecedores[i].name;
       }
     }
   }
 
-  console.log(fornecedores);
+  function units() {
+    const fornecedoresList = [];
+    for (let i = 0; i < fornecedores.length; i++) {
+      fornecedoresList.push({
+        value: fornecedores[i].id,
+        label: fornecedores[i].city,
+      });
+    }
+    return fornecedoresList;
+  }
 
-  const [unidade, setUnidade] = useState('14');
-  console.log(unidade);
+  const [unidade, setUnidade] = useState(14);
 
   const handleChange = (event) => {
     setUnidade(event.target.value);
-    localStorage.setItem(IDPRODUTO, unidade);
-    refreshPage()
+
+    /*  localStorage.setItem(IDPRODUTO, unidade);
+    refreshPage(); */
   };
 
-  const nome = "Serra Talhada"
+  function filtrar() {
+    localStorage.setItem(IDPRODUTO, unidade);
+    refreshPage();
+  }
+
+  console.log(cidadeUser);
+ 
 
   return (
-    <div>
+    <>
+      <TextField
+        id="standard-select-currency"
+        select
+        label="Cidades Atendidas"
+        value={unidade}
+        onChange={handleChange}
+        style={{
+          width: "45%",
+          marginRight: 32,
+          marginBottom: 10,
+        }}
+      >
+        {units().map((option) => (
+          <MenuItem key={option.value} value={option.value}>
+            {option.label}
+          </MenuItem>
+        ))}
+      </TextField>
+
+      {getName(unidade)}
+
+   
       <div className={classes.container}>
-      
         {produtos.map((row) => {
-          return (
-            getID(row.supplier) === nome ? 
+          return row.supplier === unidade ? (
             <StoreCard
               name={row.name}
               describe={row.description}
               category={row.category}
               value={row.value}
               unit={row.unit}
-              supplier = {row.supplier}
+              supplier={row.supplier}
               photo={row.photo}
-            /> : ''
+            />
+          ) : (
+            ""
           );
         })}
       </div>
-    </div>
-
+    </>
   );
 }

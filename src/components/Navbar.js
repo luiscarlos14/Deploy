@@ -89,7 +89,7 @@ export default function AdminNavbar({ showSidebar, setShowSidebar }) {
                             <Dropdown
                                 color="transparent"
                                 buttonText={
-                                    <div className="w-12">
+                                    <div className="w-12 h-12">
                                         <Image src={Perfil} rounded />
                                     </div>
                                 }

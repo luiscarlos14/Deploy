@@ -2,7 +2,7 @@ import StatusCard from "components/StatusCard";
 import TableCard from "components/TableCard";
 
 import React, { useEffect, useState } from "react";
-import { deleteFornecedor, EditFornecedor, getFornecedores, postFornecedores } from "./services";
+import { deleteFornecedor, EditFornecedor,EditPhotoFornecedor, getFornecedores, postFornecedores } from "./services";
 import constantes from "constantes";
 
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -102,24 +102,6 @@ export default function Fornecedores() {
 
   const totalFornecedores = list.length;
 
-  const valorT = [];
-
-  const valorTotal = () => {
-    let valor = 0;
-    for (let i = 0; i < list.length; i++) {
-      valor = list[i].valor * list[i].quantidade;
-      valorT.push(valor);
-    }
-  };
-
-  function getTotal(i) {
-    return valorT[i];
-  }
-
-  valorTotal();
-
-  const ganhoTotal = valorT.reduce((total, numero) => total + numero, 0);
-
   useEffect(() => {
     getFornecedores()
       .then((result) => {
@@ -137,6 +119,9 @@ export default function Fornecedores() {
       document.location.reload();
     } else if (status === 200 && request === "editado") {
       alert("Fornecedor Editado");
+      document.location.reload();
+    }else if (status === 200 && request === "photo") {
+      alert("Foto Editada");
       document.location.reload();
     }
   }
@@ -187,6 +172,7 @@ export default function Fornecedores() {
 
   const [open, setOpen] = React.useState(false);
   const [openEdit, setOpenEdit] = React.useState(false);
+  const [openEditPhoto, setOpenEditPhoto] = React.useState(false);
   const [modalStyle] = React.useState(getModalStyle);
   const [openDel, setOpenDel] = React.useState(false);
   const [idDel, setIdDel] = useState();
@@ -207,6 +193,14 @@ export default function Fornecedores() {
     setOpenEdit(false);
   };
 
+  const handleOpenEditPhoto = () => {
+    setOpenEditPhoto(true);
+  };
+
+  const handleCloseEditPhoto = () => {
+    setOpenEditPhoto(false);
+  };
+
   const handleOpenDel = () => {
     setOpenDel(true);
   };
@@ -215,19 +209,15 @@ export default function Fornecedores() {
     setOpenDel(false);
   };
 
-  /*   const handleChange = (event) => {
-    setUnidade(event.target.value);
-  }; */
-
   function ConfirmDelete(i) {
     setIdDel(i);
     handleOpenDel();
   }
-  //const [unidade, setUnidade] = React.useState('KG');
 
-  /* const handleChange = (event) => {
-    setUnidade(event.target.value);
-  }; */
+  function ConfirmEditPhoto(i) {
+    setIdEditPhoto(i);
+    handleOpenEditPhoto();
+  }
 
   function ConfirmEdit(i) {
     for (let cont = 0; cont < list.length; cont++) {
@@ -243,7 +233,6 @@ export default function Fornecedores() {
         setCityEdit(list[cont].city);
         setCepEdit(list[cont].cep);
         setUrlEdit(list[cont].url);
-        setSelectedFileEdit(list[cont].logo)
         setIdEdit(list[cont].id);
 
       }
@@ -264,7 +253,6 @@ export default function Fornecedores() {
       cityEdit,
       cepEdit,
       urlEdit,
-      selectedFileEdit,
       idEdit,
       refreshPage
     );
@@ -280,8 +268,18 @@ export default function Fornecedores() {
   const [cityEdit, setCityEdit] = useState("");
   const [cepEdit, setCepEdit] = useState("");
   const [urlEdit, setUrlEdit] = useState("");
-  const [selectedFileEdit, setSelectedFileEdit] = useState("");
   const [idEdit, setIdEdit] = useState("");
+
+  const [photoProdutoEdit, setPhotoProdutoEdit] = useState(null);
+  const [idEditPhoto, setIdEditPhoto] = useState("");
+
+  function EditarPhotoFornecedor() {
+    EditPhotoFornecedor(
+      photoProdutoEdit,
+      idEditPhoto,
+      refreshPage
+      )
+  }
 
   const classes = useStyles();
 
@@ -534,18 +532,6 @@ export default function Fornecedores() {
                     >
                       <div style={{ padding: 10 }}>
                         
-                      <TextField
-                          id="standard-basic"
-                          label="Logo"
-                          type='file'
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                          style={{ width: "100%", marginBottom: 10 }}
-                          onChange={(e) => setSelectedFile(e.target.files[0])}
-                        
-                        />
-
                         <TextField
                           id="standard-basic"
                           label="Nome"
@@ -707,6 +693,81 @@ export default function Fornecedores() {
                   </div>
                 </Fade>
               </Modal>
+              
+              <Modal
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                className={classes.modal}
+                open={openEditPhoto}
+                onClose={handleCloseEditPhoto}
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                  timeout: 500,
+                }}
+              >
+                <Fade in={openEditPhoto}>
+                  <div className={classes.paper}>
+                    <h2
+                      style={{
+                        fontSize: 30,
+                        fontFamily: "monospace",
+                        textAlign: "center",
+                        backgroundColor: "#287C43",
+                        color: "#fff",
+                        borderRadius: 10,
+                      }}
+                      id="transition-modal-title"
+                    >
+                      Editar Foto
+                    </h2>
+
+                    <form
+                      className={[classes.root]}
+                      noValidate
+                      autoComplete="off"
+                    >
+                      <div style={{ padding: 10 }}>
+                      <TextField
+                          id="standard-basic"
+                          label="Foto do Produto"
+                          type="file"
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          style={{ width: "100%", marginBottom: 10 }}
+                          onChange={(e) => setPhotoProdutoEdit(e.target.files[0])}
+                        />
+                      
+                      </div>
+                      <div style={{ marginRight: "12%", marginLeft: "12%" }}>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          className={classes.button}
+                          startIcon={<CancelIcon />}
+                          onClick={handleCloseEditPhoto}
+                        >
+                          Cancelar
+                        </Button>
+
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          className={classes.button}
+                          endIcon={<SaveIcon />}
+                          onClick={EditarPhotoFornecedor}
+                        >
+                          Salvar
+                        </Button>
+                      </div>
+                    </form>
+                  </div>
+                </Fade>
+              </Modal>
+              
+              
+              
               <TableContainer component={Paper}>
                 <Table
                   className={classes.table}
@@ -743,7 +804,7 @@ export default function Fornecedores() {
                             variant="contained"
                             color="primary"
                             style={{ margin: "5px" }}
-                            onClick={() => ConfirmEdit(row.id)}
+                            onClick={() => ConfirmEditPhoto(row.id)}
                           >
                             <AddAPhotoIcon />
                           </Button>

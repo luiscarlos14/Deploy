@@ -27,7 +27,7 @@ export async function EditInfoPersonal(cpf, name, surname, refreshPage) {
       }
     )
     .then((result) => {
-      refreshPage(200, "personal");
+      refreshPage(200, "personal" , null);
       //document.location.reload();
     })
     .catch((error) => {
@@ -57,9 +57,31 @@ export async function EditInfoAddress(
       }
     )
     .then(() => {
-      refreshPage(200, "address");
+      refreshPage(200, "address", city );
     })
     .catch((error) => {
       console.log(error);
     });
+}
+
+export async function EditPhotoProfile(photo, refreshPage) {
+  if (photo === null) {
+    alert("Selecione uma imagem!");
+  } else {
+    var photoEdit = new FormData();
+
+    photoEdit.append("profile", photo);
+    photoEdit.append("id", id);
+
+    const config = {
+      headers: {
+        "content-type": "multipart/form-data",
+        Authorization: `token ${token}`,
+      },
+    };
+
+    await api.patch("/users/photo", photoEdit, config).then(() => {
+      refreshPage(200, "photo", null);
+    });
+  }
 }

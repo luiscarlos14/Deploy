@@ -51,6 +51,25 @@ await api.post('/suppliers', fornecedor, config).then(() => {
  
 }
 
+export async function EditPhotoFornecedor(photo, id, refreshPage) {
+  var photoEdit = new FormData();
+
+  photoEdit.append("photo", photo);
+  photoEdit.append("id", id);
+
+  const config = {
+    headers: {
+      "content-type": "multipart/form-data",
+      Authorization: `token ${token}`,
+    },
+  };
+
+  await api.patch("/suppliers/photo", photoEdit, config).then(() => {
+    refreshPage(200, "photo");
+  });
+}
+
+
 export async function EditFornecedor(
   name,
   email,
@@ -62,34 +81,33 @@ export async function EditFornecedor(
   city,
   cep,
   url,
-  logo,
   id,
   refreshPage
 ) {
 
-
-  var fornecedorEdit = new FormData();
-
-  fornecedorEdit.append('name', name);
-  fornecedorEdit.append('email', email);
-  fornecedorEdit.append('phone', phone);
-  fornecedorEdit.append('cnpj', cnpj);
-  fornecedorEdit.append('description', description);
-  fornecedorEdit.append('street', street);
-  fornecedorEdit.append('neighborhood', neighborhood);
-  fornecedorEdit.append('city', city);
-  fornecedorEdit.append('cep', cep);
-  fornecedorEdit.append('url', url);
-  fornecedorEdit.append('logo', logo);
-  fornecedorEdit.append('id', id);
-
-  const config = {     
-    headers: { 'content-type': 'multipart/form-data', Authorization: `token ${token}`  },
-}
-
-await api.patch('/suppliers', fornecedorEdit, config).then(() => {
-  refreshPage(200, "editado");
-});
+  await api
+  .patch(
+    `/suppliers`,
+    {
+      name: name,
+      email: email,
+      phone: phone,
+      cnpj: cnpj,
+      description: description,
+      street: street,
+      neighborhood: neighborhood,
+      city: city,
+      cep: cep,
+      url: url,
+      id: id
+    },
+    {
+      headers: { Authorization: `token ${token}` },
+    }
+  )
+  .then(() => {
+    refreshPage(200, "editado");
+  });
 
   /* await api
     .patch(
