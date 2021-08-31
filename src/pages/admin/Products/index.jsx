@@ -345,7 +345,7 @@ function units(){
             style={{ marginTop: "10%" }}
             className="grid grid-cols-1 px-4 mb-16"
           >
-            <TableCard title="Vendas" color={constantes.colors.primary}>
+            <TableCard title="Produtos" color={constantes.colors.primary}>
               <ButtonT
                 color={"teal"}
                 buttonType="filled"

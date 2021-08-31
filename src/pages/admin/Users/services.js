@@ -118,15 +118,15 @@ export async function EditPhotoPerfil(photo, id, refreshPage) {
 
 export async function EditPass(
   password,
-  newPassword,
+  id,
   refreshPage
 ) {
   await api
     .patch(
-      `/users/password/`,
+      `/users/admin/password/`,
       {
-        oldPassword: password,
-        newPassword: newPassword,
+        password: password,
+        id: id,
       },
       {
         headers: { Authorization: `token ${token}` },

@@ -5,7 +5,7 @@ const id = localStorage.getItem(IDPRODUTO);
 
 export async function getProdutos(){
     
-    const res = (await api.get(`/products/${id}`, { 
+    const res = (await api.get(`/products/`, { 
       headers: { Authorization: `token ${token}`}},
       )).data.response;
     return res;

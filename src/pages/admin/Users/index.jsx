@@ -149,6 +149,9 @@ export default function Users() {
     else if (status === 200 && request === "photo") {
       alert("Foto de Perfil Alterada");
       document.location.reload();
+    }else if (status === 200 && request === "senha") {
+      alert("Senha Alterada!");
+      document.location.reload();
     }
   }
 

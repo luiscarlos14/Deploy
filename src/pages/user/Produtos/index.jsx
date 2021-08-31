@@ -107,7 +107,7 @@ export default function Produtos() {
 
   const handleChange = (event) => {
     setUnidade(event.target.value);
-
+   
     /*  localStorage.setItem(IDPRODUTO, unidade);
     refreshPage(); */
   };
@@ -117,8 +117,6 @@ export default function Produtos() {
     refreshPage();
   }
 
-  console.log(cidadeUser);
-  console.log(getLogo(unidade));
   return (
     <>
       <div>

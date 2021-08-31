@@ -4,7 +4,7 @@ const token = sessionStorage.getItem(TOKEN_KEY);
 
 export async function getProdutos() {
   const res = (
-    await api.get(`/products/${14}`, {
+    await api.get(`/products/`, {
       headers: { Authorization: `token ${token}` },
     })
   ).data.response;

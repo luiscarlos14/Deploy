@@ -620,7 +620,7 @@ export default function Vendas() {
                           <TableCell align="center">{row.quantity}</TableCell>
                           <TableCell align="center">{row.value}</TableCell>
                           <TableCell align="center">{row.unit}</TableCell>
-                          <TableCell align="center">{getTotal(i)}</TableCell>
+                          <TableCell align="center">{`R$ ${getTotal(i)}`}</TableCell>
 
                           <TableCell align="center">
                             <Button
