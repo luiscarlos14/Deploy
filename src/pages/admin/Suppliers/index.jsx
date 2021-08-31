@@ -787,7 +787,8 @@ export default function Fornecedores() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {list.map((row, i) => (
+                    {list.slice(0)
+                      .reverse().map((row, i) => (
                       <TableRow key={row.id}>
                         <TableCell align="center" component="th" scope="row">
                           {row.id}

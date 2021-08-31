@@ -94,6 +94,55 @@ export async function EditUser(
     });
 }
 
+export async function EditPhotoPerfil(photo, id, refreshPage) {
+  if (photo === null) {
+    alert("Selecione uma imagem!");
+  } else {
+    var photoEdit = new FormData();
+
+    photoEdit.append("profile", photo);
+    photoEdit.append("id", id);
+
+    const config = {
+      headers: {
+        "content-type": "multipart/form-data",
+        Authorization: `token ${token}`,
+      },
+    };
+
+    await api.patch("/users/photo", photoEdit, config).then(() => {
+      refreshPage(200, "photo", null);
+    });
+  }
+}
+
+export async function EditPass(
+  password,
+  newPassword,
+  refreshPage
+) {
+  await api
+    .patch(
+      `/users/password/`,
+      {
+        oldPassword: password,
+        newPassword: newPassword,
+      },
+      {
+        headers: { Authorization: `token ${token}` },
+      }
+    )
+    .then(() => {
+      refreshPage(200, "senha", null );
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
+
+
+
 export async function deleteUser(id, refreshPage) {
   await api
     .delete(`users/${id}`, {

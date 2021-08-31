@@ -12,7 +12,7 @@ export async function getUser() {
   return res;
 }
 
-export async function EditInfoPersonal(cpf, name, surname, refreshPage) {
+export async function EditInfoPersonal(cpf, name, surname,email,  refreshPage) {
   await api
     .patch(
       "/users/personal",
@@ -20,6 +20,7 @@ export async function EditInfoPersonal(cpf, name, surname, refreshPage) {
         cpf: cpf,
         name: name,
         surname: surname,
+        email: email,
         id: localStorage.getItem(ID),
       },
       {
@@ -58,6 +59,30 @@ export async function EditInfoAddress(
     )
     .then(() => {
       refreshPage(200, "address", city );
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
+export async function EditPass(
+  password,
+  newPassword,
+  refreshPage
+) {
+  await api
+    .patch(
+      `/users/password/${id}`,
+      {
+        oldPassword: password,
+        newPassword: newPassword,
+      },
+      {
+        headers: { Authorization: `token ${token}` },
+      }
+    )
+    .then(() => {
+      refreshPage(200, "senha", null );
     })
     .catch((error) => {
       console.log(error);

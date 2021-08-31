@@ -17,6 +17,8 @@ import TableCard from "components/TableCard";
 
 import { getVendas, getDespesas, getPlantacao } from "./services";
 
+import culturas from '../../../melhoresPlantacoes';
+
 import moment from "moment";
 import "moment/locale/pt-br";
 
@@ -66,11 +68,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Dashboard() {
   const classes = useStyles();
-
+  
   const mesAtual = new Date().getMonth() + 1;
 
   const [list, setList] = useState([]);
   const [despesas, setDespesas] = useState([]);
+  
   const despesasPendentes = [];
 
   const [plantacao, setPlantacao] = useState([]);
@@ -281,7 +284,56 @@ export default function Dashboard() {
             style={{ marginTop: "3%" }}
             className="xl:col-start-4 xl:col-end-6 px-4 mb-14"
           >
-            <TrafficCard />
+                        <TableCard
+              title= {`Sugestão de Plantações para ${moment(new Date()).locale("pt-br").format("MMMM") }` }
+              color={constantes.colors.primary}
+            >
+              <TableContainer component={Paper}>
+                <Table
+                  className={classes.table}
+                  size="small"
+                  aria-label="a dense table"
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="center">Cultura</TableCell>
+                      <TableCell align="center">Plantio</TableCell>
+                      <TableCell align="center">Colheita</TableCell>
+                
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {culturas
+                      .slice(0)
+                      .reverse()
+                      .map((row, i) =>(
+                          row.Key === moment(new Date()).locale("pt-br").format("MMMM") ? (
+                       
+                          <TableRow key={row.id}>
+
+                            <TableCell
+                              align="center"
+                              component="th"
+                              scope="row"
+                            >
+                              {row.Cultura}
+                            </TableCell>
+
+                      
+                            <TableCell align="center">{row.Plantio}</TableCell>
+
+                            <TableCell align="center">
+                              {row.Colheita}
+                            </TableCell>
+                            
+                          </TableRow>) : ''
+                        )
+                     
+                      )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </TableCard>
           </div>
         </div>
       </div>

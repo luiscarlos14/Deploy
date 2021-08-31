@@ -23,6 +23,7 @@ import {
   EditInfoAddress,
   EditPhotoProfile,
   getUser,
+  EditPass,
 } from "./Services";
 
 function refreshPage(status, request, newCity) {
@@ -38,6 +39,10 @@ function refreshPage(status, request, newCity) {
     document.location.reload();
   } else if (status === 200 && request === "photoR") {
     alert("A foto de Perfil foi removida!");
+    document.location.reload();
+  }
+  else if (status === 200 && request === "senha") {
+    alert("Senha atualizada!");
     document.location.reload();
   }
 }
@@ -84,6 +89,9 @@ export default function Settings() {
   const [cep, setCep] = useState("");
   const [email, setEmail] = useState("");
   const [foto, setFoto] = useState("");
+
+  const [senha, setSenha] = useState("");
+  const [newSenha, setNewSenha] = useState("");
 
   const Perfil = foto === null ? ProfilePicture : `${SERVER}/${foto}`;
 
@@ -304,12 +312,25 @@ export default function Settings() {
                           helperText="O CPF não pode ser modificado!"
                         />
                       </div>
+                      <div className="w-full lg:w-4/12 pr-4 mb-10 font-light">
+                        <TextField
+                          id="email"
+                          label="Email"
+                          type="e-mail"
+                          style={{ width: "100%", marginBottom: 10 }}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                        />
+                      </div>
                     </div>
                     <div style={{ marginTop: "1px" }}>
                       <Button
                         variant="contained"
                         onClick={() =>
-                          EditInfoPersonal(cpf, name, surname, refreshPage)
+                          EditInfoPersonal(cpf, name, surname, email, refreshPage)
                         }
                       >
                         Confirmar Alterações
@@ -394,19 +415,7 @@ export default function Settings() {
                       Informações de Acesso
                     </h6>
                     <div className="flex flex-wrap mt-10">
-                      <div className="w-full lg:w-4/12 pr-4 mb-10 font-light">
-                        <TextField
-                          id="email"
-                          label="Email"
-                          type="e-mail"
-                          style={{ width: "100%", marginBottom: 10 }}
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                        />
-                      </div>
+                     
 
                       <div className="w-full lg:w-4/12 pr-4 mb-10 font-light">
                         <TextField
@@ -414,6 +423,8 @@ export default function Settings() {
                           label="Senha Atual"
                           type="password"
                           style={{ width: "100%", marginBottom: 10 }}
+                          onChange={(e) => setSenha(e.target.value)}
+
                         />
                       </div>
 
@@ -421,15 +432,23 @@ export default function Settings() {
                         <TextField
                           id="newSenha"
                           label="Nova Senha"
-                          type="text"
+                          type="password"
                           style={{ width: "100%", marginBottom: 10 }}
+                          onChange={(e) => setNewSenha(e.target.value)}
+
                         />{" "}
                       </div>
                     </div>
                   </form>
 
                   <div style={{ marginTop: "1px" }}>
-                    <Button variant="contained">Confirmar Alterações</Button>
+                    <Button variant="contained" onClick={() =>
+                          EditPass(
+                            senha,
+                            newSenha,
+                            refreshPage
+                          )
+                        }>Confirmar Alterações</Button>
                   </div>
                 </CardBody>
               </Card>

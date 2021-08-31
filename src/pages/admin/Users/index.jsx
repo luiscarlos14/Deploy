@@ -2,7 +2,7 @@ import StatusCard from "components/StatusCard";
 import TableCard from "components/TableCard";
 
 import React, { useEffect, useState } from "react";
-import { getUsers, postUser, EditUser, deleteUser } from "./services";
+import { getUsers, postUser, EditUser, deleteUser, EditPhotoPerfil, EditPass } from "./services";
 import constantes from "constantes";
 
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -146,6 +146,10 @@ export default function Users() {
       alert("Usuário Editado");
       document.location.reload();
     }
+    else if (status === 200 && request === "photo") {
+      alert("Foto de Perfil Alterada");
+      document.location.reload();
+    }
   }
 
   const [admin, setAdmin] = useState(0);
@@ -197,6 +201,8 @@ export default function Users() {
 
   const [open, setOpen] = React.useState(false);
   const [openEdit, setOpenEdit] = React.useState(false);
+  const [openSenha, setOpenSenha] = React.useState(false);
+  const [openPhoto, setOpenPhoto] = React.useState(false);
   const [modalStyle] = React.useState(getModalStyle);
   const [openDel, setOpenDel] = React.useState(false);
   const [idDel, setIdDel] = useState();
@@ -215,6 +221,22 @@ export default function Users() {
 
   const handleCloseEdit = () => {
     setOpenEdit(false);
+  };
+
+  const handleOpenSenha = () => {
+    setOpenSenha(true);
+  };
+
+  const handleCloseSenha = () => {
+    setOpenSenha(false);
+  };
+
+  const handleOpenPhoto = () => {
+    setOpenPhoto(true);
+  };
+
+  const handleClosePhoto = () => {
+    setOpenPhoto(false);
   };
 
   const handleOpenDel = () => {
@@ -240,6 +262,35 @@ export default function Users() {
   function ConfirmDelete(i) {
     setIdDel(i);
     handleOpenDel();
+  }
+  const [idPhoto, setIdPhoto] = useState("");
+
+  function ConfirmPhoto(i) {
+    setIdPhoto(i);
+    handleOpenPhoto();
+  }
+
+  function EditarPhotoPerfil() {
+    EditPhotoPerfil(
+      profileEdit,
+      idPhoto,
+      refreshPage
+      )
+  }
+
+  const [idSenha, setIdSenha] = useState("");
+
+  function ConfirmarSenhaEdit(i) {
+    setIdSenha(i);
+    handleOpenSenha();
+  }
+
+  function EditarSenhaUser() {
+    EditPass(
+      confirmPasswordEdit,
+      idSenha,
+      refreshPage
+      )
   }
 
   function ConfirmEdit(i) {
@@ -290,8 +341,8 @@ export default function Users() {
   const [cityEdit, setCityEdit] = useState("");
   const [cepEdit, setCepEdit] = useState("");
   const [idEdit, setIdEdit] = useState("");
+  const [profileEdit, setProfileEdit] = useState(null);
 
-  const [passwordEdit, setPasswordEdit] = useState("");
   const [confirmPasswordEdit, setConfirmPasswordEdit] = useState("");
 
   const classes = useStyles();
@@ -327,7 +378,7 @@ export default function Users() {
         <div style={{ flex: 1 }}>
           <StatusCard
             color="purple"
-            icon="paid"
+            icon="group"
             title="Usuários Ativos"
             amount={valorTotal()}
             //percentage="3.48"
@@ -729,6 +780,147 @@ export default function Users() {
                   </div>
                 </Fade>
               </Modal>
+
+              <Modal
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                className={classes.modal}
+                open={openPhoto}
+                onClose={handleClosePhoto}
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                  timeout: 500,
+                }}
+              >
+                <Fade in={openPhoto}>
+                  <div className={classes.paper}>
+                    <h2
+                      style={{
+                        fontSize: 30,
+                        fontFamily: "monospace",
+                        textAlign: "center",
+                        backgroundColor: "#287C43",
+                        color: "#fff",
+                        borderRadius: 10,
+                      }}
+                      id="transition-modal-title"
+                    >
+                      Editar Foto do Perfil
+                    </h2>
+
+                    <form
+                      className={[classes.root]}
+                      noValidate
+                      autoComplete="off"
+                    >
+                      <div style={{ padding: 10 }}>
+                        <TextField
+                          id="standard-basic"
+                          label="Foto de Perfil"
+                          type="file"
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          style={{ width: "100%", marginBottom: 10 }}
+                          onChange={(e) => setProfileEdit(e.target.files[0])}
+                        />
+
+              
+                      </div>
+                      <div style={{ marginRight: "12%", marginLeft: "12%" }}>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          className={classes.button}
+                          startIcon={<CancelIcon />}
+                          onClick={handleClosePhoto}
+                        >
+                          Cancelar
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          className={classes.button}
+                          endIcon={<SaveIcon />}
+                          onClick={EditarPhotoPerfil}
+                        >
+                          Salvar
+                        </Button>
+                      </div>
+                    </form>
+                  </div>
+                </Fade>
+              </Modal>
+
+{/* modal senha */}
+              <Modal
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                className={classes.modal}
+                open={openSenha}
+                onClose={handleCloseSenha}
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                  timeout: 500,
+                }}
+              >
+                <Fade in={openSenha}>
+                  <div className={classes.paper}>
+                    <h2
+                      style={{
+                        fontSize: 30,
+                        fontFamily: "monospace",
+                        textAlign: "center",
+                        backgroundColor: "#287C43",
+                        color: "#fff",
+                        borderRadius: 10,
+                      }}
+                      id="transition-modal-title"
+                    >
+                      Nova Senha
+                    </h2>
+
+                    <form
+                      className={[classes.root]}
+                      noValidate
+                      autoComplete="off"
+                    >
+                      <div style={{ padding: 10 }}>
+                        
+                        <TextField
+                          id="standard-basic"
+                          label="Nova Senha"
+                          type="password"
+                          style={{ width: "100%", marginBottom: 10 }}
+                          onChange={(e) => setConfirmPasswordEdit(e.target.value)}
+                        />
+                      </div>
+                      <div style={{ marginRight: "12%", marginLeft: "12%" }}>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          className={classes.button}
+                          startIcon={<CancelIcon />}
+                          onClick={handleCloseSenha}
+                        >
+                          Cancelar
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          className={classes.button}
+                          endIcon={<SaveIcon />}
+                          onClick={EditarSenhaUser}
+                        >
+                          Salvar
+                        </Button>
+                      </div>
+                    </form>
+                  </div>
+                </Fade>
+              </Modal>
               <TableContainer component={Paper}>
                 <Table
                   className={classes.table}
@@ -773,7 +965,7 @@ export default function Users() {
                             variant="contained"
                             color="primary"
                             style={{ margin: "5px" }}
-                            onClick={() => ConfirmEdit(row.id)}
+                            onClick={() => ConfirmPhoto(row.id)}
                           >
                             <PhotoCameraIcon />
                             
@@ -782,7 +974,7 @@ export default function Users() {
                             variant="contained"
                             color="primary"
                             style={{ margin: "5px" }}
-                            onClick={() => ConfirmEdit(row.id)}
+                            onClick={() => ConfirmarSenhaEdit(row.id)}
                           >
                             <LockIcon />
                           </Button>

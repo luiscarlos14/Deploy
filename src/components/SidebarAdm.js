@@ -61,16 +61,7 @@ export default function Sidebar() {
                   Produtos
                 </NavLink>
               </li>
-              <li className="rounded-lg mb-2 text-gray-700">
-                <NavLink
-                  to="/maps"
-                  className="flex items-center gap-4 text-sm text-gray-700 font-light px-4 py-3 rounded-lg"
-                  activeClassName="bg-gradient-to-tr from-light-green-500 to-green-700 text-white shadow-md"
-                >
-                  <Icon name="map" size="2xl" />
-                  Maps
-                </NavLink>
-              </li>
+            
             </ul>
           </div>
         </div>
