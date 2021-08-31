@@ -16,6 +16,7 @@ export async function postDespesa(
   date,
   valor,
   status,
+  vencimento,
   refreshPage
 ) {
 
@@ -29,6 +30,7 @@ export async function postDespesa(
         value: valor,
         pay: status,
         frequency: "Recorrente",
+        dueDate: vencimento
       },
       {
         headers: { Authorization: `token ${token}` },
@@ -47,6 +49,7 @@ export async function EditDespesa(
   valor,
   status,
   id,
+  vencimento,
   refreshPage
 ) {
   await api
@@ -58,7 +61,9 @@ export async function EditDespesa(
         value: valor,
         pay: status,
         frequency: "Recorrente",
-        id: id
+        dueDate: vencimento,
+        id: id,
+       
       },
       {
         headers: { Authorization: `token ${token}` },

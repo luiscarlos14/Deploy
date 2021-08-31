@@ -164,6 +164,7 @@ export default function Despesas() {
 
   const [descDespesa, setDescDespesa] = useState("");
   const [dataDespesa, setDataDespesa] = useState("");
+  const [vencimento, setVencimento] = useState('null');
   const [statusDespesa, setStatusDespesa] = useState(0);
   const [valorDespesa, setValorDespesa] = useState("");
 
@@ -176,6 +177,7 @@ export default function Despesas() {
         new Date(dataDespesa),
         valorDespesa,
         statusDespesa,
+        new Date(vencimento),
         refreshPage
       );
     }
@@ -226,6 +228,7 @@ export default function Despesas() {
         setDescDespesaEdit(list[cont].description);
         setDataDespesaEdit(list[cont].date);
         setValorDespesaEdit(list[cont].value);
+        setVencimentoEdit(list[cont].dueDate)
         setIdDespesaEdit(list[cont].id);
       }
     }
@@ -236,16 +239,18 @@ export default function Despesas() {
   function editDespesa() {
     EditDespesa(
       descDespesaEdit,
-      dataDespesaEdit,
+      new Date(dataDespesaEdit),
       valorDespesaEdit,
       statusDespesa,
       idDespesaEdit,
+      new Date(vencimentoEdit),
       refreshPage
     );
   }
 
   const [descDespesaEdit, setDescDespesaEdit] = useState("");
   const [dataDespesaEdit, setDataDespesaEdit] = useState("");
+  const [vencimentoEdit, setVencimentoEdit] = useState("");
   const [valorDespesaEdit, setValorDespesaEdit] = useState("");
   const [idDespesaEdit, setIdDespesaEdit] = useState("");
 
@@ -367,22 +372,35 @@ export default function Despesas() {
                           onChange={(e) => setDescDespesa(e.target.value)}
                         />
 
-                        <TextField
+                    <TextField
                           id="date"
                           label="Data"
                           type="date"
-                          style={{ width: "100%",marginRight: '10%', marginBottom: 10 }}
+                          style={{ width: "45%",marginRight: '10%', marginBottom: 10 }}
                           defaultValue={new Date()}
                           InputLabelProps={{
                             shrink: true,
                           }}
                           onChange={(e) => setDataDespesa(e.target.value)}
                         />
+
+                        <TextField
+                          id="date"
+                          label="Data de Vencimento"
+                          type="date"
+                          style={{ width: "45%", marginBottom: 10 }}
+                          defaultValue={new Date()}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          onChange={(e) => setVencimento(e.target.value)}
+                        />
+                      
                         <TextField
                           id="standard-basic"
                           label="Valor"
                           style={{
-                            width: "40%",
+                            width: "45%",
                             marginRight: "10%",
                             marginBottom: 10,
                           }}
@@ -396,8 +414,7 @@ export default function Despesas() {
                           value={statusDespesa}
                           onChange={handleChange}
                           style={{
-                            width: "40%",
-                            marginRight: 32,
+                            width: "45%",
                             marginBottom: 10,
                           }}
                         >
@@ -479,13 +496,26 @@ export default function Despesas() {
                           id="date"
                           label="Data"
                           type="date"
-                          style={{ width: "100%", marginBottom: 10 }}
+                          style={{ width: "45%",marginRight: '10%', marginBottom: 10 }}
                           defaultValue={new Date()}
                           InputLabelProps={{
                             shrink: true,
                           }}
                           onChange={(e) => setDataDespesaEdit(e.target.value)}
                           value={dataDespesaEdit}
+                        />
+
+                      <TextField
+                          id="date"
+                          label="Data de Vencimento"
+                          type="date"
+                          style={{ width: "45%", marginBottom: 10 }}
+                          defaultValue={new Date()}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          onChange={(e) => setVencimentoEdit(e.target.value)}
+                          value={vencimentoEdit}
                         />
 
                         <TextField
@@ -556,11 +586,15 @@ export default function Despesas() {
                       <TableCell align="center">Data</TableCell>
                       <TableCell align="center">Valor</TableCell>
                       <TableCell align="center">Status</TableCell>
+                      <TableCell align="center">Vencimento</TableCell>
                       <TableCell align="center">Opções</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {list.map((row, i) => (
+                    {list
+                      .slice(0)
+                      .reverse()
+                      .map((row, i) => (
                       <TableRow key={row.id}>
                         <TableCell align="center" component="th" scope="row">
                           {row.description}
@@ -575,6 +609,9 @@ export default function Despesas() {
 
                         <TableCell align="center">
                           {row.pay === 1 ? "Paga" : "Pendente"}
+                        </TableCell>
+                        <TableCell align="center">
+                          {row.pay === 1 ? "Despesa Paga" : moment(new Date(row.dueDate)).locale("pt-br").format("ddd, D [de] MMMM [de] YYYY")}
                         </TableCell>
 
                         <TableCell align="center">

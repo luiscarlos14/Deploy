@@ -1,22 +1,22 @@
 import Card from '@material-tailwind/react/Card';
 import CardHeader from '@material-tailwind/react/CardHeader';
 import CardBody from '@material-tailwind/react/CardBody';
-import Button from '@material-tailwind/react/Button';
+import ButtonT from '@material-tailwind/react/Button';
 
 export default function PageVisitsCard() {
     return (
         <Card>
-            <CardHeader color="blue" contentPosition="none">
+            <CardHeader color="red" contentPosition="none">
                 <div className="w-full flex items-center justify-between">
-                    <h2 className="text-white text-2xl">Page Visits</h2>
-                    <Button
+                    <h2 className="text-white text-2xl">Despesas em Aberto</h2>
+                    <ButtonT
                         color="transparent"
                         buttonType="link"
                         size="lg"
                         style={{ padding: 0 }}
                     >
                         See More
-                    </Button>
+                    </ButtonT>
                 </div>
             </CardHeader>
             <CardBody>

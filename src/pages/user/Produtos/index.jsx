@@ -7,6 +7,8 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { IDPRODUTO, CITY, SERVER } from "../../../api";
 import Image from "@material-tailwind/react/Image";
 
+import padrao from '../../../assets/padrao.jpg'
+
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -64,7 +66,7 @@ export default function Produtos() {
   function getLogo(id) {
     for (let i = 0; i < fornecedores.length; i++) {
       if (fornecedores[i].id === id) {
-        return fornecedores[i].logo === null ? '' : `${SERVER}/${fornecedores[i].logo}`;
+        return fornecedores[i].logo === null ? padrao : `${SERVER}/${fornecedores[i].logo}`;
       }
     }
   }

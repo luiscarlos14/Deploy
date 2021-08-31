@@ -10,5 +10,6 @@ export const ADMIN = 'administrador';
 export const ID = "identificador";
 export const IDPRODUTO = "fornecedorProduto";
 export const CITY = "cidadeUsuario";
+//export const SERVER = "http://sertaorural.herokuapp.com";
 export const SERVER = "http://localhost:3001";
 
