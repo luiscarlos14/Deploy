@@ -4,6 +4,8 @@ import ChartBar from 'components/ChartBar';
 import PageVisitsCard from 'components/PageVisitsCard';
 import TrafficCard from 'components/TrafficCard';
 
+
+
 export default function Dashboard() {
     return (
         <>

@@ -57,7 +57,6 @@ const imagem =  `${SERVER}/${props.photo}`;
 
 const foto = props.photo === null ? "https://images.tcdn.com.br/img/img_prod/696987/fosfato_monoamonico_map_dripsol_sqm_sc_25kg_263_1_20191116163351.jpg" : imagem
   const classes = useStyles();
-  console.log(imagem)
 
   const [expanded, setExpanded] = React.useState(false);
 
@@ -65,7 +64,6 @@ const foto = props.photo === null ? "https://images.tcdn.com.br/img/img_prod/696
     setExpanded(!expanded);
   };
 
-  console.log(foto)
 
   return (
     <Card className={classes.root}>
@@ -109,14 +107,6 @@ const foto = props.photo === null ? "https://images.tcdn.com.br/img/img_prod/696
           <Typography paragraph>
             <b>Detalhes:</b> {props.describe}
           </Typography>
-
-          <CardMedia
-            className={classes.submedia}
-            image={
-              "https://1757140519.rsc.cdn77.org/blog/wp-content/uploads/sites/6/2020/09/h_farm_11.png"
-            }
-            title="Logomarca da Loja"
-          />
         </CardContent>
       </Collapse>
     </Card>

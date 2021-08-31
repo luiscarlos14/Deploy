@@ -54,7 +54,7 @@ await api.post('/suppliers', fornecedor, config).then(() => {
 export async function EditPhotoFornecedor(photo, id, refreshPage) {
   var photoEdit = new FormData();
 
-  photoEdit.append("photo", photo);
+  photoEdit.append("logo", photo);
   photoEdit.append("id", id);
 
   const config = {

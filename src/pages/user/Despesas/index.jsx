@@ -168,7 +168,7 @@ export default function Despesas() {
   const [valorDespesa, setValorDespesa] = useState("");
 
   function saveDespesa() {
-    if (descDespesa === "" || dataDespesa === "" || valorDespesa === "") {
+    if (descDespesa === "" || dataDespesa === "" || valorDespesa === "" ) {
       alert("Preencha todos os campos!");
     } else {
       postDespesa(
@@ -371,14 +371,13 @@ export default function Despesas() {
                           id="date"
                           label="Data"
                           type="date"
-                          style={{ width: "100%", marginBottom: 10 }}
+                          style={{ width: "100%",marginRight: '10%', marginBottom: 10 }}
                           defaultValue={new Date()}
                           InputLabelProps={{
                             shrink: true,
                           }}
                           onChange={(e) => setDataDespesa(e.target.value)}
                         />
-
                         <TextField
                           id="standard-basic"
                           label="Valor"

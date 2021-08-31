@@ -18,9 +18,10 @@ export async function postDespesa(
   status,
   refreshPage
 ) {
+
   await api
     .post(
-      `/expenditures`,
+      "/expenditures",
       {
         user: localStorage.getItem(ID),
         description: desc,
@@ -35,7 +36,9 @@ export async function postDespesa(
     )
     .then(() => {
       refreshPage(200, "despesa");
-    });
+    }).catch((e)=>{
+      console.log(e);
+    })
 }
 
 export async function EditDespesa(

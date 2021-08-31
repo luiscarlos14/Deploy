@@ -4,12 +4,10 @@ import { getProdutos, getFornecedores } from "./services";
 
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
-import api, { IDPRODUTO, CITY } from "../../../api";
-import Button from "@material-ui/core/Button";
-import SaveIcon from "@material-ui/icons/Save";
+import { IDPRODUTO, CITY, SERVER } from "../../../api";
+import Image from "@material-tailwind/react/Image";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { createImportTypeNode } from "typescript";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -20,7 +18,6 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: "wrap",
   },
 }));
-
 
 export default function Produtos() {
   const classes = useStyles();
@@ -57,6 +54,41 @@ export default function Produtos() {
       }
     }
   }
+  function getPhone(id) {
+    for (let i = 0; i < fornecedores.length; i++) {
+      if (fornecedores[i].id === id) {
+        return fornecedores[i].phone;
+      }
+    }
+  }
+  function getLogo(id) {
+    for (let i = 0; i < fornecedores.length; i++) {
+      if (fornecedores[i].id === id) {
+        return fornecedores[i].logo === null ? '' : `${SERVER}/${fornecedores[i].logo}`;
+      }
+    }
+  }
+  function getDescricao(id) {
+    for (let i = 0; i < fornecedores.length; i++) {
+      if (fornecedores[i].id === id) {
+        return fornecedores[i].description;
+      }
+    }
+  }
+  function getEmail(id) {
+    for (let i = 0; i < fornecedores.length; i++) {
+      if (fornecedores[i].id === id) {
+        return fornecedores[i].email;
+      }
+    }
+  }
+  function getSite(id) {
+    for (let i = 0; i < fornecedores.length; i++) {
+      if (fornecedores[i].id === id) {
+        return fornecedores[i].url;
+      }
+    }
+  }
 
   function units() {
     const fornecedoresList = [];
@@ -84,48 +116,76 @@ export default function Produtos() {
   }
 
   console.log(cidadeUser);
- 
-
+  console.log(getLogo(unidade));
   return (
     <>
-      <TextField
-        id="standard-select-currency"
-        select
-        label="Cidades Atendidas"
-        value={unidade}
-        onChange={handleChange}
-        style={{
-          width: "45%",
-          marginRight: 32,
-          marginBottom: 10,
-        }}
-      >
-        {units().map((option) => (
-          <MenuItem key={option.value} value={option.value}>
-            {option.label}
-          </MenuItem>
-        ))}
-      </TextField>
+      <div>
+        <div style={{ padding: "3%" }}>
+          <TextField
+            id="standard-select-currency"
+            select
+            label="Cidades Atendidas"
+            value={unidade}
+            onChange={handleChange}
+            style={{
+              width: "45%",
+              marginRight: 32,
+              marginBottom: 10,
+            }}
+          >
+            {units().map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </div>
 
-      {getName(unidade)}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+            backgroundColor: "#287C43",
+            padding: 15,
+          }}
+        >
+          <Image src={getLogo(unidade)} />
 
-   
-      <div className={classes.container}>
-        {produtos.map((row) => {
-          return row.supplier === unidade ? (
-            <StoreCard
-              name={row.name}
-              describe={row.description}
-              category={row.category}
-              value={row.value}
-              unit={row.unit}
-              supplier={row.supplier}
-              photo={row.photo}
-            />
-          ) : (
-            ""
-          );
-        })}
+          <div style={{ fontSize: 30, color: "#fff", paddingTop: 20 }}>
+            {getName(unidade)}
+          </div>
+
+            <div style={{flex: 1, fontSize: 20, color: "#fff" }}>
+              {getDescricao(unidade)}
+            </div>
+
+            <div style={{ flex: 1, fontSize: 20, color: "#fff" }}>
+              {getPhone(unidade)} | {getEmail(unidade)} | {getSite(unidade)}
+            </div>
+
+         
+        </div>
+      </div>
+      <div>
+        <div className={classes.container}>
+          {produtos.map((row) => {
+            return row.supplier === unidade ? (
+              <StoreCard
+                name={row.name}
+                describe={row.description}
+                category={row.category}
+                value={row.value}
+                unit={row.unit}
+                supplier={row.supplier}
+                photo={row.photo}
+              />
+            ) : (
+              ""
+            );
+          })}
+        </div>
       </div>
     </>
   );
